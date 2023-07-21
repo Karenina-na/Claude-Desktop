@@ -4,7 +4,7 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build  &&  electron-builder",
+    "build": "vue-tsc --noEmit && vite build && electron-builder",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",

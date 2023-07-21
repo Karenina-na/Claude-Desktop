@@ -6,15 +6,15 @@ import electron from 'vite-plugin-electron'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-      vue(),
-      electron({
+    plugins: [
+        vue(),
+        electron({
         entry: 'electron/main.ts',
-      }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+        }),
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
+    },
 })

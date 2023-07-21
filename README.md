@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-  <img width="180" src="./src/assets/logo.png" alt="Claude">
+  <img width="180" src="public/logo.png" alt="Claude">
   <h1>Claude</h1>
   <p>Claude Desktop App (Windows)</p>
 </div>

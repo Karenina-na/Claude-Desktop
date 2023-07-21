@@ -2,14 +2,12 @@ import { app, BrowserWindow } from 'electron'
 
 app.whenReady().then(() => {
     const win = new BrowserWindow({
-        title: 'Main window',
+        title: 'Claude',
+        width: 1000,
+        height: 800,
+        icon: "public/logo.png",
     })
 
-    // You can use `process.env.VITE_DEV_SERVER_URL` when the vite command is called `serve`
-    if (process.env.VITE_DEV_SERVER_URL) {
-        win.loadURL(process.env.VITE_DEV_SERVER_URL)
-    } else {
-        // Load your file
-        win.loadFile('index.html');
-    }
+    win.loadURL("https://claude.ai/chat/")
+
 })
