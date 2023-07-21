@@ -1,6 +1,12 @@
 {
   "name": "claude-desktop",
   "version": "0.0.0",
+  "private": true,
+  "author": {
+    "name": "Karenina-na",
+    "email": "weizixiang0@outlook.com"
+  },
+  "description": "An Claude desktop application built with Vite + Vue 3.x + Electron 13.x",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -30,5 +36,32 @@
     "vite": "^3.0.9",
     "vite-plugin-electron": "^0.12.0",
     "vue-tsc": "^1.8.5"
+  },
+  "build":{
+    "appId": "Karenina-na.Claude",
+    "productName": "Claude Desktop",
+    "copyright": "Copyright © 2023 Karenina-na",
+    "directories": {
+      "output": "dist-client"
+    },
+    "win": {
+      "icon": "./public/logo.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": "false",
+      "perMachine": "true",
+      "allowToChangeInstallationDirectory": "true",
+      "installerIcon": "./public/logo.ico",
+      "uninstallerIcon": "./public/logo.ico",
+      "installerHeaderIcon": "./public/logo.ico"
+    }
   }
 }
