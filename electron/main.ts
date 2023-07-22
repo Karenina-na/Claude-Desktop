@@ -1,5 +1,6 @@
 import { app,protocol, BrowserWindow, Menu, Tray } from 'electron'
 import menuTemplate from "./menu";
+import path from "path";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
@@ -17,6 +18,7 @@ app.whenReady().then(() => {
         webPreferences: {
             nodeIntegration: true,
             nodeIntegrationInWorker: true,
+            preload: path.join(__dirname, '../electron/preload.js'),
             webSecurity: false,
         }
     })
@@ -33,6 +35,8 @@ app.whenReady().then(() => {
         }
     });
 })
+
+
 
 // create menu
 app.on('ready',() =>{
