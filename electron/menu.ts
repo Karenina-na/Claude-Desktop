@@ -31,13 +31,12 @@ export default function createMenu() {
             label: 'Control Center',
             accelerator: 'ctrl+shift+P',
             click: () => {
-                // 新开一个窗口
+                // Create the browser window.
                 const win = new BrowserWindow({
                     title: 'Control Center',
                     width: 800,
                     height: 600,
                     icon: "public/logo.png",
-                    parent: BrowserWindow.getFocusedWindow(),
                     modal: true,
                     center: true,
                     webPreferences: {
