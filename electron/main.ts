@@ -23,19 +23,22 @@ app.whenReady().then(() => {
         }
     })
 
+    // load url
     win.loadURL('https://claude.ai/chat/')
 
-    // Tray
-    const tray: Tray = new Tray('public/logo.png');
-    tray.on('click', () => {
-        if (win.isVisible()) {
-            win.hide();
-        }else{
-            win.show();
-        }
+    // tray
+    createTray(win);
+
+    // dev tools
+    if (!app.isPackaged) {
+        win.webContents.openDevTools()
+    }
+
+    // event
+    win.webContents.on('did-finish-load', () => {
+
     });
 })
-
 
 
 // create menu
@@ -43,6 +46,52 @@ app.on('ready',() =>{
     const m = Menu.buildFromTemplate(menuTemplate());
     Menu.setApplicationMenu(m);
 });
+
+
+// create Tray
+function createTray(win: BrowserWindow){
+    // Tray
+    const tray: Tray = new Tray(path.join(__dirname, '../public/logo.png'));
+    const contextMenu = Menu.buildFromTemplate([{
+            label: 'Control Center',
+            click: () => {
+                // Create the browser window.
+                const win = new BrowserWindow({
+                    title: 'Control Center',
+                    width: 800,
+                    height: 600,
+                    icon: "public/logo.png",
+                    modal: true,
+                    center: true,
+                    webPreferences: {
+                        nodeIntegration: true,
+                        nodeIntegrationInWorker: true,
+                        webSecurity: false,
+                    }
+                })
+                if (app.isPackaged) {
+                    win.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`)
+                } else {
+                    win.loadURL('http://localhost:5173/')
+                }
+            }
+        },
+        { label: 'Show Window', click: () => win.show() },
+        { label: 'Reload', click: () => win.reload() },
+        { type: 'separator' },
+        { label: 'Quit', click: () => app.quit() }
+    ])
+
+    tray.setContextMenu(contextMenu)
+    tray.on('click', () => {
+        if (win.isVisible()) {
+            win.hide();
+        }else{
+            win.show();
+        }
+    });
+}
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
