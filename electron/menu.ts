@@ -28,6 +28,31 @@ export default function createMenu() {
     }, {
         label: 'Preferences',
         submenu: [{
+            label: 'Prompt',
+            accelerator: 'ctrl+O',
+            click: () => {
+                // Create the browser window.
+                const win = new BrowserWindow({
+                    title: 'Prompt',
+                    width: 800,
+                    height: 600,
+                    icon: "public/logo.png",
+                    modal: true,
+                    center: true,
+                    parent: BrowserWindow.getFocusedWindow(),
+                    webPreferences: {
+                        nodeIntegration: true,
+                        nodeIntegrationInWorker: true,
+                        webSecurity: false,
+                    }
+                })
+                if (app.isPackaged) {
+                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'prompt' })
+                } else {
+                    win.loadURL('http://localhost:5173/#/prompt')
+                }
+            }
+        },{
             label: 'Control Center',
             accelerator: 'ctrl+shift+P',
             click: () => {
@@ -46,9 +71,9 @@ export default function createMenu() {
                     }
                 })
                 if (app.isPackaged) {
-                    win.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`)
+                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
                 } else {
-                    win.loadURL('http://localhost:5173/')
+                    win.loadURL('http://localhost:5173/#/controlCenter')
                 }
             }
         },
@@ -101,8 +126,7 @@ export default function createMenu() {
                 {role: 'zoomIn'},
                 {role: 'zoomOut'},
             ]
-        },
-        {
+        }, {
             role: 'help',
             submenu: [
                 {

@@ -70,9 +70,9 @@ function createTray(win: BrowserWindow){
                     }
                 })
                 if (app.isPackaged) {
-                    win.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`)
+                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
                 } else {
-                    win.loadURL('http://localhost:5173/')
+                    win.loadURL('http://localhost:5173/#/controlCenter')
                 }
             }
         },
