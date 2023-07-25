@@ -1,5 +1,6 @@
 import { app,protocol, BrowserWindow, Menu, Tray } from 'electron'
 import menuTemplate from "./menu";
+import createConfig from "./config"
 import path from "path";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
@@ -34,10 +35,15 @@ app.whenReady().then(() => {
         win.webContents.openDevTools()
     }
 
+    // create config
+    createConfig();
+
     // event
     win.webContents.on('did-finish-load', () => {
 
     });
+
+
 })
 
 
