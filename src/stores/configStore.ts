@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia'
-import Config from './entity/configModel'
+import Config from '../../public/configModel'
 
 export const ConfigStore = defineStore('ConfigStore', () => {
     let config = ref(new Config())

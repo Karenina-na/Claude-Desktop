@@ -1,6 +1,6 @@
 import { app,protocol, BrowserWindow, Menu, Tray } from 'electron'
 import menuTemplate from "./menu";
-import createConfig from "./config"
+import ConfigFactory from "./config"
 import path from "path";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
@@ -10,10 +10,14 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 app.whenReady().then(() => {
+
+    // config
+    const config = ConfigFactory();
+
     const win= new BrowserWindow({
         title: 'Claude',
-        width: 1000,
-        height: 800,
+        width: config.main_width,
+        height: config.main_height,
         center: true,
         icon: "public/logo.png",
         webPreferences: {
@@ -23,7 +27,6 @@ app.whenReady().then(() => {
             webSecurity: false,
         }
     })
-
     // load url
     win.loadURL('https://claude.ai/chat/')
 
@@ -35,14 +38,10 @@ app.whenReady().then(() => {
         win.webContents.openDevTools()
     }
 
-    // create config
-    createConfig();
-
     // event
     win.webContents.on('did-finish-load', () => {
 
     });
-
 
 })
 
@@ -52,7 +51,6 @@ app.on('ready',() =>{
     const m = Menu.buildFromTemplate(menuTemplate());
     Menu.setApplicationMenu(m);
 });
-
 
 // create Tray
 function createTray(win: BrowserWindow){

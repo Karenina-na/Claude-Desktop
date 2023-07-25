@@ -11,24 +11,24 @@ class Config{
     constructor(){
         this._theme = "system";
         this._stay_on_top = false;
-        this._main_width = 800;
-        this._main_height = 600;
+        this._main_width = 1080;
+        this._main_height = 768;
         this._tray = false;
-        this._tray_width = 300;
-        this._tray_height = 400;
+        this._tray_width = 400;
+        this._tray_height = 600;
         this._ua_tray = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
     }
 
     // load
-    loadConfig(theme: string, stay_on_top: boolean, main_width: number, main_height: number, tray: boolean, tray_width: number, tray_height: number, ua_tray: string){
-        this._theme = theme;
-        this._stay_on_top = stay_on_top;
-        this._main_width = main_width;
-        this._main_height = main_height;
-        this._tray = tray;
-        this._tray_width = tray_width;
-        this._tray_height = tray_height;
-        this._ua_tray = ua_tray;
+    loadConfig(config: Config){
+        this._theme = config.theme;
+        this._stay_on_top = config.stay_on_top;
+        this._main_width = config.main_width;
+        this._main_height = config.main_height;
+        this._tray = config.tray;
+        this._tray_width = config.tray_width;
+        this._tray_height = config.tray_height;
+        this._ua_tray = config.ua_tray;
     }
 
     get theme(): string {
