@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 class Config{
     private _theme: string;
     private _stay_on_top: boolean;
@@ -86,14 +83,6 @@ class Config{
         this._ua_tray = value;
     }
 
-    // load
-    public loadConfig(){
-        Object.assign(this, JSON.parse(fs.readFileSync(path.join(__dirname, '../config/config.json')).toString()))
-    }
-
-    public writeConfig(){
-        fs.writeFileSync(path.join(__dirname, '../config/config.json'), JSON.stringify(this, null, 1))
-    }
 }
 
 export default Config;
