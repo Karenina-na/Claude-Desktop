@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 class Config{
     private _theme: string;
     private _stay_on_top: boolean;
@@ -17,18 +20,6 @@ class Config{
         this._tray_width = 400;
         this._tray_height = 600;
         this._ua_tray = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
-    }
-
-    // load
-    loadConfig(config: Config){
-        this._theme = config.theme;
-        this._stay_on_top = config.stay_on_top;
-        this._main_width = config.main_width;
-        this._main_height = config.main_height;
-        this._tray = config.tray;
-        this._tray_width = config.tray_width;
-        this._tray_height = config.tray_height;
-        this._ua_tray = config.ua_tray;
     }
 
     get theme(): string {
@@ -93,6 +84,15 @@ class Config{
 
     set ua_tray(value: string) {
         this._ua_tray = value;
+    }
+
+    // load
+    public loadConfig(){
+        Object.assign(this, JSON.parse(fs.readFileSync(path.join(__dirname, '../config/config.json')).toString()))
+    }
+
+    public writeConfig(){
+        fs.writeFileSync(path.join(__dirname, '../config/config.json'), JSON.stringify(this, null, 1))
     }
 }
 

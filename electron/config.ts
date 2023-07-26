@@ -12,35 +12,29 @@ function ConfigFactory(){
     // error dialog
     const error  = (message:string) => {dialog.showErrorBox('Error', message)}
 
-    try {
-        // mkdir config
+    try{
+        fs.statSync(path.join(__dirname, '../config'))
+        // config dir exists
         try{
-            fs.statSync(path.join(__dirname, '../config'))
+            fs.statSync(path.join(__dirname, '../config/config.json'))
+            // config file exists
 
-            try{
-                fs.statSync(path.join(__dirname, '../config/config.json'))
+            config.loadConfig()
+        }catch(err){
+            // config file not exists
 
-                // load config.json
-                config.loadConfig(Object.assign(new configModel(), JSON.parse(fs.readFileSync(path.join(__dirname, '../config/config.json')).toString())))
-            }catch (err){
-
-                // create config.json
-                if (err.code == 'ENOENT') {
-                    fs.writeFileSync(path.join(__dirname, '../config/config.json'), JSON.stringify(config, null, 1))
-                }
-            }
-
-        }catch (err){
-            if (err.code == 'ENOENT') {
-
-                // create config dir and config.json
-                fs.mkdirSync(path.join(__dirname, '../config'))
-                fs.writeFileSync(path.join(__dirname, '../config/config.json'), JSON.stringify(config, null, 1))
-            }
+            config.writeConfig()
         }
-
-    } catch(e){
-        error(e.message)
+    }catch(err){
+        // config dir not exists
+        try{
+            fs.mkdirSync(path.join(__dirname, '../config'))
+            // mkdir success
+            config.writeConfig()
+        }catch(err){
+            // mkdir failed
+            error(err.message)
+        }
     }
 
     return config;

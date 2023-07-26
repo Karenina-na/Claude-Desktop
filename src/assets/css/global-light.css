@@ -1,0 +1,19 @@
+/*明亮色调*/
+html.light {
+    transition: all 0.2s;
+    background-color: #fff;
+    color: #000;
+    --el-transition-duration: 0.2s;
+    --el-transition-duration-fast: 0.2s;
+    --el-transition-all: 0.2s;
+}
+
+/*登陆页面标题*/
+/*登陆页面项目名*/
+html.light #Login-sign-title,
+html.light #Login-project-name {
+    background: -webkit-linear-gradient(315deg, #42d392 25%, #b412e6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -17,6 +17,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "element-plus": "^2.3.8",
     "perfect-scrollbar": "^1.5.5",
     "pinia": "^2.0.21",
