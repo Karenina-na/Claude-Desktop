@@ -1,6 +1,9 @@
 import { app, dialog, BrowserWindow, nativeTheme , MenuItemConstructorOptions } from 'electron'
 import path from "path";
 
+let PromptWin: BrowserWindow | null = null;
+let ControlCenterWin: BrowserWindow | null = null;
+
 export default function createMenu() {
     const menuTemplate: Array<MenuItemConstructorOptions> = [{
         label: 'Claude',
@@ -31,8 +34,12 @@ export default function createMenu() {
             label: 'Prompt',
             accelerator: 'ctrl+O',
             click: () => {
+                if (PromptWin) {
+                    PromptWin.focus();
+                    return;
+                }
                 // Create the browser window.
-                const win = new BrowserWindow({
+                PromptWin = new BrowserWindow({
                     title: 'Prompt',
                     width: 800,
                     height: 600,
@@ -47,17 +54,26 @@ export default function createMenu() {
                     }
                 })
                 if (app.isPackaged) {
-                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'prompt' })
+                    PromptWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'prompt' })
                 } else {
-                    win.loadURL('http://localhost:5173/#/prompt')
+                    PromptWin.loadURL('http://localhost:5173/#/prompt')
                 }
+                // Emitted when the window is closed.
+                PromptWin.on('closed', () => {
+                    PromptWin = null
+                })
             }
         },{
             label: 'Control Center',
             accelerator: 'ctrl+shift+P',
             click: () => {
+                // exist
+                if (ControlCenterWin) {
+                    ControlCenterWin.focus();
+                    return;
+                }
                 // Create the browser window.
-                const win = new BrowserWindow({
+                ControlCenterWin = new BrowserWindow({
                     title: 'Control Center',
                     width: 800,
                     height: 600,
@@ -71,10 +87,14 @@ export default function createMenu() {
                     }
                 })
                 if (app.isPackaged) {
-                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
+                    ControlCenterWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
                 } else {
-                    win.loadURL('http://localhost:5173/#/controlCenter')
+                    ControlCenterWin.loadURL('http://localhost:5173/#/controlCenter')
                 }
+                // Emitted when the window is closed.
+                ControlCenterWin.on('closed', () => {
+                    ControlCenterWin = null
+                })
             }
         },
             {type: 'separator'},
@@ -144,7 +164,13 @@ export default function createMenu() {
                     }
                 },
                 {type: 'separator'},
-                {role: 'toggleDevTools'},
+                {role: 'toggleDevTools', label: 'Toggle DevTools', accelerator: 'ctrl+shift+I', click: () => {
+                        const win = BrowserWindow.getFocusedWindow()
+                        if (win) {
+                            win.webContents.openDevTools({ mode: 'detach'});
+                        }
+                    }
+                },
             ]
         }
     ]

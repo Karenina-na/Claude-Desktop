@@ -35,7 +35,7 @@ app.whenReady().then(() => {
 
     // dev tools
     if (!app.isPackaged) {
-        win.webContents.openDevTools()
+        win.webContents.openDevTools({ mode: 'detach' });
     }
 
     // event
