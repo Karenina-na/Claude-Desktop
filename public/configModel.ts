@@ -1,3 +1,7 @@
+import path from "path";
+import {app} from "electron";
+import fs from "fs";
+
 class Config{
     private _theme: string;
     private _stay_on_top: boolean;
@@ -7,6 +11,7 @@ class Config{
     private _tray_width: number;
     private _tray_height: number;
     private _ua_tray: string;
+    private _prompt_path: string;
 
     constructor(){
         this._theme = "system";
@@ -17,6 +22,14 @@ class Config{
         this._tray_width = 400;
         this._tray_height = 600;
         this._ua_tray = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
+        this._prompt_path = path.join(path.join(path.join(app.getPath('home'), '.claude'), 'config.json'), 'prompt');
+
+        // create prompt dir
+        try{
+            fs.statSync(path.join(app.getPath('home'), '.claude', 'prompt'))
+        }catch(err){
+            fs.mkdirSync(path.join(app.getPath('home'), '.claude', 'prompt'))
+        }
     }
 
     get theme(): string {
@@ -81,6 +94,14 @@ class Config{
 
     set ua_tray(value: string) {
         this._ua_tray = value;
+    }
+
+    get prompt_path(): string {
+        return this._prompt_path;
+    }
+
+    set prompt_path(value: string) {
+        this._prompt_path = value;
     }
 
 }

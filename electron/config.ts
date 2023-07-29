@@ -16,8 +16,6 @@ function ConfigFactory(){
     // config file
     const configFile = path.join(configDir, 'config.json');
 
-    console.log(configDir)
-
     // error dialog
     const error  = (message:string) => {dialog.showErrorBox('Error', message)}
 
