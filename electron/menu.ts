@@ -61,7 +61,7 @@ export default function createMenu(config: configModel) {
                         }
                         // Create the browser window.
                         PromptWin = new BrowserWindow({
-                            title: 'Prompt',
+                            title: 'Prompt Center',
                             width: 800,
                             height: 600,
                             icon: "public/logo.png",
@@ -72,6 +72,12 @@ export default function createMenu(config: configModel) {
                                 nodeIntegration: true,
                                 nodeIntegrationInWorker: true,
                                 webSecurity: false,
+                            },
+                            titleBarStyle: 'hidden',
+                            titleBarOverlay: {
+                                color: '#000000',
+                                symbolColor: '#74b1be',
+                                height: 30,
                             }
                         })
                         if (app.isPackaged) {
@@ -106,7 +112,7 @@ export default function createMenu(config: configModel) {
                                 nodeIntegration: true,
                                 nodeIntegrationInWorker: true,
                                 webSecurity: false,
-                            }
+                            },
                         })
                         if (app.isPackaged) {
                             ControlCenterWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
@@ -137,19 +143,19 @@ export default function createMenu(config: configModel) {
                                     let con = ConfigFactory();
                                     con.theme = 'light';
                                     ConfigUpdate(con);
-                                    nativeTheme.themeSource = con.theme;
+                                    nativeTheme.themeSource = 'light';
                                 }},
                             {label: 'Dark', type: 'radio', checked: theme == 1, click: () => {
                                     let con = ConfigFactory();
                                     con.theme = 'dark';
                                     ConfigUpdate(con);
-                                    nativeTheme.themeSource = con.theme;
+                                    nativeTheme.themeSource = 'dark';
                                 }},
                             {label: 'System', type: 'radio', checked: theme == 2, click: () => {
                                     let con = ConfigFactory();
                                     con.theme = 'system';
                                     ConfigUpdate(con);
-                                    nativeTheme.themeSource = con.theme;
+                                    nativeTheme.themeSource = 'system';
                             }},
                         ]
                     },]
