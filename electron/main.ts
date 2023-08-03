@@ -1,6 +1,6 @@
 import { app,protocol, BrowserWindow, Menu, Tray } from 'electron'
 import menuTemplate from "./menu";
-import ConfigFactory from "./config"
+import {ConfigFactory} from "../public/config"
 import path from "path";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
@@ -9,10 +9,10 @@ protocol.registerSchemesAsPrivileged([
     { scheme: "app", privileges: { secure: true, standard: true } }
 ]);
 
-app.whenReady().then(() => {
+// config
+const config = ConfigFactory();
 
-    // config
-    const config = ConfigFactory();
+app.whenReady().then(() => {
 
     const win= new BrowserWindow({
         title: 'Claude',
@@ -35,7 +35,7 @@ app.whenReady().then(() => {
 
     // dev tools
     if (!app.isPackaged) {
-        win.webContents.openDevTools({ mode: 'detach' });
+        // win.webContents.openDevTools({ mode: 'detach' });
     }
 
     // event
@@ -48,7 +48,7 @@ app.whenReady().then(() => {
 
 // create menu
 app.on('ready',() =>{
-    const m = Menu.buildFromTemplate(menuTemplate());
+    const m = Menu.buildFromTemplate(menuTemplate(config));
     Menu.setApplicationMenu(m);
 });
 
