@@ -1,4 +1,4 @@
-import { app,protocol, BrowserWindow, Menu, Tray } from 'electron'
+import {app, BrowserWindow, Menu, protocol, Tray} from 'electron'
 import menuTemplate from "./menu";
 import {ConfigFactory} from "../public/config"
 import path from "path";
@@ -23,7 +23,6 @@ app.whenReady().then(() => {
         webPreferences: {
             nodeIntegration: true,
             nodeIntegrationInWorker: true,
-            preload: path.join(__dirname, '../electron/preload.js'),
             webSecurity: false,
         }
     })
@@ -45,13 +44,7 @@ app.whenReady().then(() => {
         }
     }
 
-    // event
-    win.webContents.on('did-finish-load', () => {
-
-    });
-
 })
-
 
 // create menu
 app.on('ready',() =>{

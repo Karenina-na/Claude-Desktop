@@ -1,4 +1,4 @@
-import { app, dialog, BrowserWindow, nativeTheme , MenuItemConstructorOptions } from 'electron'
+import {app, BrowserWindow, dialog, MenuItemConstructorOptions, nativeTheme} from 'electron'
 import configModel from "../public/configModel";
 import path from "path";
 import {ConfigFactory, ConfigUpdate} from "../public/config";
@@ -72,6 +72,7 @@ export default function createMenu(config: configModel) {
                                 nodeIntegration: true,
                                 nodeIntegrationInWorker: true,
                                 webSecurity: false,
+                                preload: path.join(__dirname, '../electron/preload.js'),
                             },
                             titleBarStyle: 'hidden',
                             titleBarOverlay: {
@@ -102,8 +103,10 @@ export default function createMenu(config: configModel) {
                         // Create the browser window.
                         ControlCenterWin = new BrowserWindow({
                             title: 'Control Center',
-                            width: 800,
-                            height: 600,
+                            width: 1000,
+                            height: 650,
+                            minWidth: 1000,
+                            minHeight: 650,
                             icon: "public/logo.png",
                             modal: true,
                             center: true,
@@ -112,6 +115,7 @@ export default function createMenu(config: configModel) {
                                 nodeIntegration: true,
                                 nodeIntegrationInWorker: true,
                                 webSecurity: false,
+                                preload: path.join(__dirname, '../electron/preload.js'),
                             },
                         })
                         if (app.isPackaged) {
@@ -156,7 +160,7 @@ export default function createMenu(config: configModel) {
                                     con.theme = 'system';
                                     ConfigUpdate(con);
                                     nativeTheme.themeSource = 'system';
-                            }},
+                                }},
                         ]
                     },]
         }, {

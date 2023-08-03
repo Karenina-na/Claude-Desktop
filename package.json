@@ -17,6 +17,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@vueuse/core": "^10.3.0",
     "axios": "^1.4.0",
     "element-plus": "^2.3.8",
     "perfect-scrollbar": "^1.5.5",
