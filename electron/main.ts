@@ -38,6 +38,13 @@ app.whenReady().then(() => {
         // win.webContents.openDevTools({ mode: 'detach' });
     }
 
+    // stay on top
+    if (config.stay_on_top) {
+        if (win) {
+            win.setAlwaysOnTop(true);
+        }
+    }
+
     // event
     win.webContents.on('did-finish-load', () => {
 
@@ -95,7 +102,6 @@ function createTray(win: BrowserWindow){
         }
     });
 }
-
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

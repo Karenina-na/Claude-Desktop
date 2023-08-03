@@ -101,6 +101,7 @@ export default function createMenu(config: configModel) {
                             icon: "public/logo.png",
                             modal: true,
                             center: true,
+                            parent: BrowserWindow.getFocusedWindow(),
                             webPreferences: {
                                 nodeIntegration: true,
                                 nodeIntegrationInWorker: true,
@@ -120,32 +121,35 @@ export default function createMenu(config: configModel) {
                 },
                     {type: 'separator'},
                     {
-                        label: 'Stay On Top', type: 'checkbox', checked: false, click: () => {
+                        label: 'Stay On Top', type: 'checkbox', checked: config.stay_on_top, click: () => {
+                            let con = ConfigFactory();
+                            con.stay_on_top = !con.stay_on_top;
+                            ConfigUpdate(con);
                             const win = BrowserWindow.getFocusedWindow()
                             if (win) {
-                                win.setAlwaysOnTop(!win.isAlwaysOnTop());
+                                win.setAlwaysOnTop(con.stay_on_top);
                             }
                         }, accelerator: 'ctrl+T'
                     },
                     {
                         label: 'Theme', submenu: [
                             {label: 'Light', type: 'radio', checked: theme == 0,click: () => {
-                                    nativeTheme.themeSource = 'light';
                                     let con = ConfigFactory();
                                     con.theme = 'light';
                                     ConfigUpdate(con);
+                                    nativeTheme.themeSource = con.theme;
                                 }},
                             {label: 'Dark', type: 'radio', checked: theme == 1, click: () => {
-                                    nativeTheme.themeSource = 'dark';
                                     let con = ConfigFactory();
                                     con.theme = 'dark';
                                     ConfigUpdate(con);
+                                    nativeTheme.themeSource = con.theme;
                                 }},
                             {label: 'System', type: 'radio', checked: theme == 2, click: () => {
-                                    nativeTheme.themeSource = 'system';
                                     let con = ConfigFactory();
                                     con.theme = 'system';
                                     ConfigUpdate(con);
+                                    nativeTheme.themeSource = con.theme;
                             }},
                         ]
                     },]
