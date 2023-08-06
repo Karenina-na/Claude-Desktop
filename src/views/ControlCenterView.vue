@@ -156,6 +156,10 @@ function choiceItem(value:string){
   background-color: rgb(229, 229, 229);
 }
 
+.control-center-main-container{
+  background-color: rgba(155, 154, 149, 0.3);
+}
+
 /* scrollbar */
 .scrollbar{
   width: 100%;
@@ -244,6 +248,7 @@ function choiceItem(value:string){
 
 /* copy-right */
 .copy-right{
+  -webkit-user-select: none;
   bottom: 0;
   width: 100%;
   text-align: center;
@@ -255,5 +260,10 @@ function choiceItem(value:string){
 .copy-right a{
   color: #6DB3BC;
   text-decoration: none;
+}
+
+.copy-right a:hover{
+  color: #4182f3;
+  text-decoration: underline;
 }
 </style>

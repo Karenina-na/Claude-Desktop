@@ -5,6 +5,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const { contextBridge, ipcRenderer } = require('electron')
 
     contextBridge.exposeInMainWorld('electronAPI', {
-        getPath: () => ipcRenderer.invoke('getPath'),
+        quit: () => ipcRenderer.send('quit'),
+        getConfigPath: () => ipcRenderer.invoke('getConfigPath'),
+        getConfig: () => ipcRenderer.invoke('getConfig'),
+        openConfig: () => ipcRenderer.send('openConfig'),
+        updateConfig: (config) => ipcRenderer.invoke('updateConfig', config),
+        resetConfig: () => ipcRenderer.invoke('resetConfig'),
     })
 })

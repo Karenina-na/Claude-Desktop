@@ -1,7 +1,8 @@
 import {app, BrowserWindow, Menu, protocol, Tray} from 'electron'
 import menuTemplate from "./menu";
-import {ConfigFactory} from "../public/config"
+import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path from "path";
+import Config from "../public/configModel";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
@@ -104,7 +105,41 @@ app.on('window-all-closed', () => {
 // render operation
 app.whenReady().then(() => {
     const { ipcMain } = require('electron')
-    ipcMain.handle('getPath', () => {
-        return "path-config"
+
+    // quit
+    ipcMain.on('quit', (event, arg) => {
+        app.quit()
+    })
+
+    // get config path
+    ipcMain.handle('getConfigPath', () => {
+        const configDir = path.join(app.getPath('home'), '.claude');
+        return path.join(configDir, 'config.json')
+    })
+
+    // get config
+    ipcMain.handle('getConfig', () => {
+        return ConfigFactory();
+    })
+
+    // open config
+    ipcMain.on('openConfig', (event, arg) => {
+        const configDir = path.join(app.getPath('home'), '.claude');
+        const configPath = path.join(configDir, 'config.json');
+        const { shell } = require('electron')
+        shell.openPath(configPath).then(r => console.log(r))
+    })
+
+    // update config
+    ipcMain.handle('updateConfig', (event, arg) => {
+        ConfigUpdate(arg);
+        return "ok";
+    })
+
+    // reset config
+    ipcMain.handle('resetConfig', (event, arg) => {
+        const config = new Config();
+        ConfigUpdate(config);
+        return "ok"
     })
 })

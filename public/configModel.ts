@@ -18,7 +18,7 @@ class Config{
         this._stay_on_top = false;
         this._main_width = 1080;
         this._main_height = 768;
-        this._tray = false;
+        this._tray = true;
         this._tray_width = 400;
         this._tray_height = 600;
         this._ua_tray = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
