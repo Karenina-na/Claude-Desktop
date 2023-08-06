@@ -187,7 +187,7 @@ function choiceItem(value:string){
 /* aside */
 .control-aside-icon{
   margin: 0 0 0 8px;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 100;
   padding-right: 10px;
   padding-bottom: 3px;

@@ -8,62 +8,99 @@
         <el-tab-pane label="General" name="general">
 
           <!-- stay on top -->
-          <div>
+          <div class="control-center-setting-items">
             <span>Stay On Top:</span>
             <el-switch
+                class="control-center-setting-items-value"
                 v-model="config._stay_on_top"
-                class="ml-2"
                 style="--el-switch-on-color: rgba(19,206,102,0.6); --el-switch-off-color: rgba(255,73,73,0.6)"
             />
           </div>
 
           <!-- tray -->
-          <div>
+          <div class="control-center-setting-items">
             <span>Enable Tray:</span>
             <el-switch
                 v-model="config._tray"
-                class="ml-2"
+                class="control-center-setting-items-value"
                 style="--el-switch-on-color: rgba(19,206,102,0.6); --el-switch-off-color: rgba(255,73,73,0.6)"
             />
           </div>
 
           <!-- theme-->
-          <div>
+          <div class="control-center-setting-items">
             <span>Theme:</span>
-            <el-radio-group v-model="config._theme">
-              <el-radio label="light" />
-              <el-radio label="dark" />
-              <el-radio label="system" />
+            <el-radio-group v-model="config._theme" class="control-center-setting-items-value">
+              <el-radio label="light" style="scale: 1.1;"/>
+              <el-radio label="dark" style="scale: 1.1;"/>
+              <el-radio label="system" style="scale: 1.1;"/>
             </el-radio-group>
           </div>
 
           <!-- agent -->
-          <div>
+          <div class="control-center-setting-items">
             <span>User Agent:</span>
             <el-input
                 v-model="config._ua_tray"
-                autosize
+                class="control-center-setting-items-value"
+                :autosize="{ minRows: 2, maxRows: 4 }"
                 type="textarea"
                 placeholder="User Agent"
                 spellcheck="false"
+                style="width: 350px;"
             />
           </div>
 
           <!-- prompt path -->
-          <div>
+          <div class="control-center-setting-items">
             <span>Prompt Path:</span>
             <el-input
                 v-model="config._prompt_path"
+                class="control-center-setting-items-value"
                 autosize
-                type="textarea"
                 placeholder="Prompt Path"
                 spellcheck="false"
+                style="width: 350px;"
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Main Window" name="mainWindow">Main Window</el-tab-pane>
+
+        <el-tab-pane label="Main Window" name="mainWindow">
+          <!-- default width -->
+          <div class="control-center-setting-items">
+            <span>Default Width:</span>
+            <el-input-number
+                v-model="config._main_width"
+                class="control-center-setting-items-value"
+                controls-position="right"
+                :min="0"
+                :max="9999"
+                :step="1"
+                style="width: 100px;"
+            />
+          </div>
+
+          <!-- default height -->
+          <div class="control-center-setting-items">
+            <span>Default Height:</span>
+            <el-input-number
+                v-model="config._main_height"
+                class="control-center-setting-items-value"
+                controls-position="right"
+                :min="0"
+                :max="9999"
+                :step="1"
+                style="width: 100px;"
+            />
+          </div>
+
+
+
+        </el-tab-pane>
       </el-tabs>
-      <div>
+
+      <div class="control-center-setting-bottom">
+        <!-- submit -->
         <el-popconfirm
             width="240"
             confirm-button-text="OK"
@@ -76,7 +113,11 @@
             <el-button type="success" plain>Submit</el-button>
           </template>
         </el-popconfirm>
+
+        <!-- cancel -->
         <el-button type="info" plain @click="clearConfig()">Cancel</el-button>
+
+        <!-- reset to defaults -->
         <el-popconfirm
             width="280"
             confirm-button-text="OK"
@@ -218,6 +259,38 @@ function resetConfig(){
 }
 .control-center-setting-tabs-container{
   margin: 0 30px;
+}
+
+/* items */
+.control-center-setting-items {
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+}
+
+.control-center-setting-items span {
+  font-size: 16px;
+  padding-right: 40px;
+  justify-self: end;
+  align-self: center;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.control-center-setting-items-value{
+  grid-area: 1 / 2 / 2 / 4;
+}
+
+/* bottom */
+.control-center-setting-bottom{
+  margin: 16px 150px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
 }
 
 </style>
