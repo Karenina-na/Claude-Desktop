@@ -1,0 +1,17 @@
+/*暗黑色调*/
+html.dark {
+    transition: all 0.2s;
+    background-color: #1d1e1f;
+    color: #fff;
+    --el-transition-duration: 0.2s;
+    --el-transition-duration-fast: 0.2s;
+    --el-transition-all: 0.2s;
+}
+
+/*登录页面标题*/
+html.dark #Login-project-name {
+    background: -webkit-linear-gradient(315deg, #fff424 10%, #42d392);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

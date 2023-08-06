@@ -1,104 +1,168 @@
-import { app, dialog, BrowserWindow, nativeTheme , MenuItemConstructorOptions } from 'electron'
+import {app, BrowserWindow, dialog, MenuItemConstructorOptions, nativeTheme} from 'electron'
+import configModel from "../public/configModel";
 import path from "path";
+import {ConfigFactory, ConfigUpdate} from "../public/config";
 
-export default function createMenu() {
+let PromptWin: BrowserWindow | null = null;
+let ControlCenterWin: BrowserWindow | null = null;
+
+export default function createMenu(config: configModel) {
+
+    // theme: light=0, dark=1, system=2
+    let theme: number = 2;
+    switch (config.theme){
+        case 'light':
+            nativeTheme.themeSource = 'light';
+            theme = 0;
+            break;
+        case 'dark':
+            nativeTheme.themeSource = 'dark';
+            theme = 1;
+            break;
+        case 'system':
+            nativeTheme.themeSource = 'system';
+            theme = 2;
+            break;
+    }
+
     const menuTemplate: Array<MenuItemConstructorOptions> = [{
-        label: 'Claude',
-        submenu: [
-            {
-                label: 'About Claude', click: () => {
-                    dialog.showMessageBox({
-                        icon: 'public/logo.png',
-                        title: 'About Claude',
-                        // package.json version
-                        message: `Version ${app.getVersion()}`,
-                        detail: 'Claude is a desktop app for the Claude chatbot.',
-                        buttons: ['OK']
-                    });
-                }
-            },
-            {label: 'Check for Updates'},
-            {
-                role: 'minimize', label: 'Hide', accelerator: 'ctrl+H', click: () => {
-                }
-            },
-            {type: 'separator'},
-            {role: 'quit', label: 'Quit', accelerator: 'ctrl+W'}
-        ]
-    }, {
-        label: 'Preferences',
-        submenu: [{
-            label: 'Prompt',
-            accelerator: 'ctrl+O',
-            click: () => {
-                // Create the browser window.
-                const win = new BrowserWindow({
-                    title: 'Prompt',
-                    width: 800,
-                    height: 600,
-                    icon: "public/logo.png",
-                    modal: true,
-                    center: true,
-                    parent: BrowserWindow.getFocusedWindow(),
-                    webPreferences: {
-                        nodeIntegration: true,
-                        nodeIntegrationInWorker: true,
-                        webSecurity: false,
+            label: 'Claude',
+            submenu: [
+                {
+                    label: 'About Claude', click: () => {
+                        dialog.showMessageBox({
+                            icon: 'public/logo.png',
+                            title: 'About Claude',
+                            // package.json version
+                            message: `Version ${app.getVersion()}`,
+                            detail: 'Claude is a desktop app for the Claude chatbot.',
+                            buttons: ['OK']
+                        });
                     }
-                })
-                if (app.isPackaged) {
-                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'prompt' })
-                } else {
-                    win.loadURL('http://localhost:5173/#/prompt')
-                }
-            }
-        },{
-            label: 'Control Center',
-            accelerator: 'ctrl+shift+P',
-            click: () => {
-                // Create the browser window.
-                const win = new BrowserWindow({
-                    title: 'Control Center',
-                    width: 800,
-                    height: 600,
-                    icon: "public/logo.png",
-                    modal: true,
-                    center: true,
-                    webPreferences: {
-                        nodeIntegration: true,
-                        nodeIntegrationInWorker: true,
-                        webSecurity: false,
+                },
+                {label: 'Check for Updates'},
+                {
+                    role: 'minimize', label: 'Hide', accelerator: 'ctrl+H', click: () => {
                     }
-                })
-                if (app.isPackaged) {
-                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
-                } else {
-                    win.loadURL('http://localhost:5173/#/controlCenter')
-                }
-            }
-        },
-            {type: 'separator'},
-            {
-                label: 'Stay On Top', type: 'checkbox', checked: false, click: () => {
-                    const win = BrowserWindow.getFocusedWindow()
-                    if (win) {
-                        win.setAlwaysOnTop(!win.isAlwaysOnTop());
+                },
+                {type: 'separator'},
+                {role: 'quit', label: 'Quit', accelerator: 'ctrl+W'}
+            ]
+        }, {
+            label: 'Preferences',
+            submenu: [
+                {
+                    label: 'Prompt',
+                    accelerator: 'ctrl+O',
+                    click: () => {
+                        if (PromptWin) {
+                            PromptWin.focus();
+                            return;
+                        }
+                        // Create the browser window.
+                        PromptWin = new BrowserWindow({
+                            title: 'Prompt Center',
+                            width: 800,
+                            height: 600,
+                            icon: "public/logo.png",
+                            modal: true,
+                            center: true,
+                            parent: BrowserWindow.getFocusedWindow(),
+                            webPreferences: {
+                                nodeIntegration: true,
+                                nodeIntegrationInWorker: true,
+                                webSecurity: false,
+                                preload: path.join(__dirname, '../electron/preload.js'),
+                            },
+                            titleBarStyle: 'hidden',
+                            titleBarOverlay: {
+                                color: '#000000',
+                                symbolColor: '#74b1be',
+                                height: 30,
+                            }
+                        })
+                        if (app.isPackaged) {
+                            PromptWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'prompt' })
+                        } else {
+                            PromptWin.loadURL('http://localhost:5173/#/prompt')
+                        }
+                        // Emitted when the window is closed.
+                        PromptWin.on('closed', () => {
+                            PromptWin = null
+                        })
                     }
-                }, accelerator: 'ctrl+T'
-            },
-            {
-                label: 'Theme', submenu: [
-                    {label: 'Light', type: 'radio', click: () => {
-                            nativeTheme.themeSource = 'light';
-                        }},
-                    {label: 'Dark', type: 'radio', click: () => {
-                            nativeTheme.themeSource = 'dark';
-                        }},
-                    {label: 'System', type: 'radio', checked: true, click: () => {
-                            nativeTheme.themeSource = 'system';
-                    }},
-                ]
-            },]
+                },{
+                    label: 'Control Center',
+                    accelerator: 'ctrl+shift+P',
+                    click: () => {
+                        // exist
+                        if (ControlCenterWin) {
+                            ControlCenterWin.focus();
+                            return;
+                        }
+                        // Create the browser window.
+                        ControlCenterWin = new BrowserWindow({
+                            title: 'Control Center',
+                            width: 1000,
+                            height: 650,
+                            minWidth: 1000,
+                            minHeight: 650,
+                            icon: "public/logo.png",
+                            modal: true,
+                            center: true,
+                            parent: BrowserWindow.getFocusedWindow(),
+                            webPreferences: {
+                                nodeIntegration: true,
+                                nodeIntegrationInWorker: true,
+                                webSecurity: false,
+                                preload: path.join(__dirname, '../electron/preload.js')
+                            },
+                        })
+                        if (app.isPackaged) {
+                            ControlCenterWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
+                        } else {
+                            ControlCenterWin.loadURL('http://localhost:5173/#/controlCenter')
+                        }
+                        // Emitted when the window is closed.
+                        ControlCenterWin.on('closed', () => {
+                            ControlCenterWin = null
+                        })
+                    }
+                },
+                    {type: 'separator'},
+                    {
+                        label: 'Stay On Top', type: 'checkbox', checked: config.stay_on_top, click: () => {
+                            let con = ConfigFactory();
+                            con.stay_on_top = !con.stay_on_top;
+                            ConfigUpdate(con);
+                            const win = BrowserWindow.getFocusedWindow()
+                            if (win) {
+                                win.setAlwaysOnTop(con.stay_on_top);
+                            }
+                        }, accelerator: 'ctrl+T'
+                    },
+                    {
+                        label: 'Theme', submenu: [
+                            {label: 'Light', type: 'radio', checked: theme == 0,click: () => {
+                                    let con = ConfigFactory();
+                                    con.theme = 'light';
+                                    ConfigUpdate(con);
+                                    nativeTheme.themeSource = 'light';
+                                }},
+                            {label: 'Dark', type: 'radio', checked: theme == 1, click: () => {
+                                    let con = ConfigFactory();
+                                    con.theme = 'dark';
+                                    ConfigUpdate(con);
+                                    nativeTheme.themeSource = 'dark';
+                                }},
+                            {label: 'System', type: 'radio', checked: theme == 2, click: () => {
+                                    let con = ConfigFactory();
+                                    con.theme = 'system';
+                                    ConfigUpdate(con);
+                                    nativeTheme.themeSource = 'system';
+                                }},
+                        ]
+                    },]
         }, {
             label: 'Window',
             submenu: [
@@ -144,7 +208,13 @@ export default function createMenu() {
                     }
                 },
                 {type: 'separator'},
-                {role: 'toggleDevTools'},
+                {label: 'Toggle Dev Tools', accelerator: 'ctrl+shift+I', click: () => {
+                        const win = BrowserWindow.getFocusedWindow()
+                        if (win) {
+                            win.webContents.openDevTools({ mode: 'detach'});
+                        }
+                    }
+                },
             ]
         }
     ]

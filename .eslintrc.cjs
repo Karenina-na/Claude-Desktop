@@ -16,5 +16,4 @@ module.exports = {
     "SharedArrayBuffer": "readonly",
     "process": true
   },
-
 }
