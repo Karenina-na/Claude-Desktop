@@ -27,6 +27,11 @@ app.whenReady().then(() => {
             webSecurity: false,
         }
     })
+
+    // set user agent
+    let session = win.webContents.session;
+    session.setUserAgent(config.ua_tray);
+
     // load url
     win.loadURL('https://claude.ai/chat/')
 
