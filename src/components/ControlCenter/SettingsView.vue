@@ -221,6 +221,3 @@ function resetConfig(){
 }
 
 </style>
-
-//  翻译：完成control的general功能
-// complete control general function
