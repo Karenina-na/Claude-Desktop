@@ -100,3 +100,11 @@ function createTray(win: BrowserWindow){
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
 })
+
+// render operation
+app.whenReady().then(() => {
+    const { ipcMain } = require('electron')
+    ipcMain.handle('getPath', () => {
+        return "path-config"
+    })
+})

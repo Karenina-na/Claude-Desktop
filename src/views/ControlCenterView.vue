@@ -81,6 +81,15 @@
         <el-main class="control-center-main-container">
           <el-scrollbar class="scrollbar">
             <router-view/>
+
+            <!-- copy right -->
+            <div class="copy-right">
+              <p>
+                <a href="https://github.com/Karenina-na/Claude-Desktop" target="_blank" >Claude Desktop</a>
+                © 2023 Created by <a href="https://github.com/Karenina-na/" target="_blank">Karenina-na</a>
+              </p>
+            </div>
+
           </el-scrollbar>
         </el-main>
     </el-container>
@@ -136,6 +145,7 @@ function choiceItem(value:string){
 .control-center-container, .control-aside-container, .control-center-main-container{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   height: calc(100vh - 5px); /* auto height */
+  padding: 0;
 }
 
 .control-aside{
@@ -230,5 +240,20 @@ function choiceItem(value:string){
 .star-enter-from, .star-leave-to{
   transition: all 0.1s ease 0s;
   opacity: 0;
+}
+
+/* copy-right */
+.copy-right{
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  color: #6b778c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.copy-right a{
+  color: #6DB3BC;
+  text-decoration: none;
 }
 </style>

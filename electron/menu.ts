@@ -115,7 +115,7 @@ export default function createMenu(config: configModel) {
                                 nodeIntegration: true,
                                 nodeIntegrationInWorker: true,
                                 webSecurity: false,
-                                preload: path.join(__dirname, '../electron/preload.js'),
+                                preload: path.join(__dirname, '../electron/preload.js')
                             },
                         })
                         if (app.isPackaged) {
