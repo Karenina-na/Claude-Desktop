@@ -62,28 +62,40 @@ app.on('ready',() =>{
 function createTray(win: BrowserWindow){
     // Tray
     const tray: Tray = new Tray(path.join(__dirname, '../public/logo.png'));
+    let ControlCenterWin: BrowserWindow | null = null;
     const contextMenu = Menu.buildFromTemplate([{
             label: 'Control Center',
             click: () => {
+                if (ControlCenterWin) {
+                    ControlCenterWin.focus();
+                    return;
+                }
                 // Create the browser window.
-                const win = new BrowserWindow({
+                ControlCenterWin = new BrowserWindow({
                     title: 'Control Center',
-                    width: 800,
-                    height: 600,
+                    width: 1000,
+                    height: 650,
+                    resizable: false,
                     icon: "public/logo.png",
                     modal: true,
                     center: true,
+                    parent: BrowserWindow.getFocusedWindow(),
                     webPreferences: {
                         nodeIntegration: true,
                         nodeIntegrationInWorker: true,
                         webSecurity: false,
-                    }
+                        preload: path.join(__dirname, '../electron/preload.js')
+                    },
                 })
                 if (app.isPackaged) {
-                    win.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
+                    ControlCenterWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'controlCenter' })
                 } else {
-                    win.loadURL('http://localhost:5173/#/controlCenter')
+                    ControlCenterWin.loadURL('http://localhost:5173/#/controlCenter')
                 }
+                // Emitted when the window is closed.
+                ControlCenterWin.on('closed', () => {
+                    ControlCenterWin = null
+                })
             }
         },
         { label: 'Show Window', click: () => win.show() },

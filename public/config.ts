@@ -37,6 +37,7 @@ function ConfigFactory(){
         try{
             fs.mkdirSync(configDir)
             // mkdir success
+            config =  new configModel()
             fs.writeFileSync(configFile, JSON.stringify(config, null, 1))
         }catch(err){
 
