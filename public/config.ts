@@ -9,7 +9,7 @@ import configModel from "./configModel";
 
 // create and load config file
 function ConfigFactory(){
-    const config = new configModel();
+    let config: configModel;
 
     // config dir
     const configDir = path.join(app.getPath('home'), '.claude');
@@ -25,9 +25,11 @@ function ConfigFactory(){
         try{
             fs.statSync(configFile)
             // config file exists
+            config =  new configModel()
             Object.assign(config, JSON.parse(fs.readFileSync(configFile).toString()))
         }catch(err){
             // config file not exists
+            config =  new configModel()
             fs.writeFileSync(configFile, JSON.stringify(config, null, 1))
         }
     }catch(err){

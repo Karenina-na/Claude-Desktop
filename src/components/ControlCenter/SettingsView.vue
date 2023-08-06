@@ -140,7 +140,6 @@ import { ref } from 'vue'
 import type { TabsPaneContext } from 'element-plus'
 import {ElMessageBox} from "element-plus";
 
-
 // active tab name
 const activeName = ref('general')
 
@@ -157,11 +156,20 @@ window.electronAPI.getConfigPath().then((path : any)=> {
 })
 
 // config
-const config = ref({})
+class configModel {
+  _stay_on_top: boolean = false
+  _tray: boolean = false
+  _theme: string = 'light'
+  _ua_tray: string = ''
+  _prompt_path: string = ''
+  _main_width: number = 0
+  _main_height: number = 0
+}
+const config = ref({} as configModel)
 window.electronAPI.getConfig().then((con : any)=> {
   config.value = con
 }, (err: Error) => {
-  config.value = undefined
+  config.value = {} as configModel
 })
 function openConfig(){
   window.electronAPI.openConfig()
@@ -197,7 +205,7 @@ function clearConfig(){
   window.electronAPI.getConfig().then((con : any)=> {
     config.value = con
   }, (err: Error) => {
-    config.value = undefined
+    config.value = {} as configModel
   })
 }
 function resetConfig(){
