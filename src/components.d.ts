@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AboutView: typeof import('./components/ControlCenter/AboutView.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElContainer: typeof import('element-plus/es')['ElContainer']
@@ -17,6 +18,7 @@ declare module 'vue' {
     ElRate: typeof import('element-plus/es')['ElRate']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    HomeView: typeof import('./components/ControlCenter/HomeView.vue')['default']
     IEpCircleCheckFilled: typeof import('~icons/ep/circle-check-filled')['default']
     IEpCollapse: typeof import('~icons/ep/collapse')['default']
     IEpDArrowLeft: typeof import('~icons/ep/d-arrow-left')['default']
@@ -26,7 +28,11 @@ declare module 'vue' {
     IEpNotebook: typeof import('~icons/ep/notebook')['default']
     IEpSetting: typeof import('~icons/ep/setting')['default']
     IEpWarning: typeof import('~icons/ep/warning')['default']
+    Notes: typeof import('./components/ControlCenter/Notes.vue')['default']
+    NotesView: typeof import('./components/ControlCenter/NotesView.vue')['default']
+    PromptsView: typeof import('./components/ControlCenter/PromptsView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SettingsView: typeof import('./components/ControlCenter/SettingsView.vue')['default']
   }
 }

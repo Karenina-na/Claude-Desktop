@@ -71,7 +71,7 @@
             }" @click="choiceItem('about')">
               <el-icon :size="isCollapsed ? '20px' : '16px'" style="transition: all 0.3s"><i-ep-warning/></el-icon>
               <Transition name="iconP">
-                <p v-if="!isCollapsed" class="control-aside-icon">about</p>
+                <p v-if="!isCollapsed" class="control-aside-icon">About</p>
               </Transition>
             </div>
 
@@ -80,7 +80,7 @@
       </el-aside>
         <el-main class="control-center-main-container">
           <el-scrollbar class="scrollbar">
-            asdfasdfasdf
+            <router-view/>
           </el-scrollbar>
         </el-main>
     </el-container>
@@ -90,6 +90,9 @@
 <script setup lang="ts">
 import { version, author } from '../../package.json'
 import {ref} from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
 
 const isCollapsed = ref(false)
 let asideWidth = ref('200px')
@@ -103,12 +106,27 @@ function changeStar(){
 }
 
 // settings prompts notes about
-let choice = ref('settings')
+let choice = ref('home')
 
 // choice
 function choiceItem(value:string){
   choice.value = value
-  console.log(choice.value)
+  switch (value){
+    case 'settings':
+      router.push('/controlCenter/settings')
+      break;
+    case 'prompts':
+      router.push('/controlCenter/prompts')
+      break;
+    case 'notes':
+      router.push('/controlCenter/notes')
+      break;
+    case 'about':
+      router.push('/controlCenter/about')
+      break;
+    default:
+      break;
+  }
 }
 
 </script>
