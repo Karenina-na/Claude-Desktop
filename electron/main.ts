@@ -121,6 +121,9 @@ app.on('window-all-closed', () => {
 
 // render operation
 app.whenReady().then(() => {
+    // auto update
+    // autoUpdateInit().then((r: any) => {console.log(r);});
+
     const { ipcMain } = require('electron')
 
     // quit

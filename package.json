@@ -1,6 +1,6 @@
 {
   "name": "claude-desktop",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "private": true,
   "author": {
     "name": "Karenina-na",
@@ -20,6 +20,8 @@
     "@element-plus/icons-vue": "^2.1.0",
     "@vueuse/core": "^10.3.0",
     "axios": "^1.4.0",
+    "electron-log": "^4.4.8",
+    "electron-updater": "^6.1.1",
     "element-plus": "^2.3.8",
     "perfect-scrollbar": "^1.5.5",
     "pinia": "^2.0.21",
@@ -54,6 +56,12 @@
     "directories": {
       "output": "dist-client"
     },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://124.220.162.209/"
+      }
+    ],
     "win": {
       "icon": "./public/logo.ico",
       "target": [
