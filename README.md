@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center" style="text-align: center;">
   <img width="180" src="public/logo.png" alt="Claude">
   <h1>Claude</h1>
   <p>Claude Desktop App (Windows)</p>
