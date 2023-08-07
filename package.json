@@ -1,6 +1,6 @@
 {
   "name": "claude-desktop",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "private": true,
   "author": {
     "name": "Karenina-na",
@@ -51,15 +51,19 @@
   },
   "build": {
     "appId": "Karenina-na.Claude",
-    "productName": "Claude Desktop",
+    "artifactName": "${productName}-setup-${version}.${ext}",
+    "productName": "Claude-Desktop",
     "copyright": "Copyright © 2023 Karenina-na",
     "directories": {
       "output": "dist-client"
     },
     "publish": [
       {
-        "provider": "generic",
-        "url": "http://124.220.162.209/"
+        "provider": "github",
+        "owner": "Karenina-na",
+        "repo": "Claude-Desktop",
+        "releaseType": "release",
+        "protocol": "https"
       }
     ],
     "win": {

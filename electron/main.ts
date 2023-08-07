@@ -3,6 +3,7 @@ import menuTemplate from "./menu";
 import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path from "path";
 import Config from "../public/configModel";
+import {autoUpdateInit} from "./autoUpdater";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
@@ -121,13 +122,11 @@ app.on('window-all-closed', () => {
 
 // render operation
 app.whenReady().then(() => {
-    // auto update
-    // autoUpdateInit().then((r: any) => {console.log(r);});
 
     const { ipcMain } = require('electron')
 
     // quit
-    ipcMain.on('quit', (event, arg) => {
+    ipcMain.on('quit', () => {
         app.quit()
     })
 
@@ -143,7 +142,7 @@ app.whenReady().then(() => {
     })
 
     // open config
-    ipcMain.on('openConfig', (event, arg) => {
+    ipcMain.on('openConfig', () => {
         const configDir = path.join(app.getPath('home'), '.claude');
         const configPath = path.join(configDir, 'config.json');
         const { shell } = require('electron')
@@ -157,9 +156,12 @@ app.whenReady().then(() => {
     })
 
     // reset config
-    ipcMain.handle('resetConfig', (event, arg) => {
+    ipcMain.handle('resetConfig', () => {
         const config = new Config();
         ConfigUpdate(config);
         return "ok"
     })
+
+    // auto update
+    autoUpdateInit().then((r: any) => {console.log(r);});
 })

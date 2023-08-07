@@ -2,7 +2,7 @@ import {app, BrowserWindow, dialog, MenuItemConstructorOptions, nativeTheme} fro
 import configModel from "../public/configModel";
 import path from "path";
 import {ConfigFactory, ConfigUpdate} from "../public/config";
-import {dataPath} from "./helper";
+import {autoUpdater} from "electron-updater";
 
 let PromptWin: BrowserWindow | null = null;
 let ControlCenterWin: BrowserWindow | null = null;
@@ -41,9 +41,7 @@ export default function createMenu(config: configModel) {
                         });
                     }
                 },
-                {label: 'Check for Updates', click: () => {
-                        console.log(dataPath);
-                    }
+                {label: 'Check for Updates', click: () => {autoUpdater.checkForUpdates().then(r => {console.log(r)})}
                 },
                 {role: 'minimize', label: 'Hide', accelerator: 'ctrl+H'},
                 {type: 'separator'},

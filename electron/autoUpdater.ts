@@ -14,11 +14,6 @@ export async function autoUpdateInit() {
     logger.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}';
     logger.transports.file.resolvePath = () => join(path.join(app.getPath('home'), '.claude'), 'logs/claude.log')
 
-    await sleep(5000)
-    // Each time it starts, it will automatically perform a version check and update itself accordingly,
-    // either through scheduled updates or any other suitable method.
-    await autoUpdater.checkForUpdates()
-
     autoUpdater.logger = logger
     autoUpdater.disableWebInstaller = false
     autoUpdater.autoDownload = false // Please write this as "false." When written as "true," I am encountering a permission issue and unable to determine the exact cause.
@@ -51,6 +46,7 @@ export async function autoUpdateInit() {
                 title: 'Upgrade notification.！',
                 message: 'The latest application has been downloaded for you. \n' +
                     'Click \'OK\' to replace it with the newest version immediately!',
+                textWidth: 250,
             })
             .then(() => {
                 logger.info('Exit the application, installation will begin!')
@@ -59,12 +55,17 @@ export async function autoUpdateInit() {
                 autoUpdater.quitAndInstall()
             })
     })
+
+    await sleep(3000)
+    // Each time it starts, it will automatically perform a version check and update itself accordingly,
+    // either through scheduled updates or any other suitable method.
+    await autoUpdater.checkForUpdates()
 }
 
 async function askUpdate(version:any) {
     logger.info(`The latest version. ${version}`)
-    let { updater } = getLocalData() || {}
-    let { auto, version: ver, skip } = updater
+    let { updater } = getLocalData()
+    let { auto, version: ver, skip } = updater || {}
     logger.info(
         JSON.stringify({
             ...updater,
@@ -78,14 +79,14 @@ async function askUpdate(version:any) {
     } else {
         const { response, checkboxChecked } = await dialog.showMessageBox({
             type: 'question',
-            title: 'Software update notification.',
+            title: `${name} software update notification.`,
             buttons: ['Closing', 'Skipping this version.', 'Installing the update.'],
-            message: `${name} The latest version is ${version}，the current version is ${app.getVersion()}，Is it necessary to download updates now ?`,
+            message: `The latest version is ${version}，the current version is ${app.getVersion()}，Is it necessary to download updates now ?`,
             defaultId: 2,
             cancelId: -1,
-            checkboxLabel: 'Automatic download and installation of future updates.',
+            checkboxLabel: 'Automatic updates installation.',
             checkboxChecked: false,
-            textWidth: 300,
+            textWidth: 250,
         })
         if ([1, 2].includes(response)) {
             let updaterData = {
