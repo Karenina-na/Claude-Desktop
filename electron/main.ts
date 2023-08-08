@@ -159,6 +159,18 @@ app.whenReady().then(() => {
         return "ok";
     })
 
+    // reset update info
+    ipcMain.handle('resetUpdateInfo', () => {
+        setLocalData({
+            updater: {
+                version: app.getVersion(),
+                skip: false,
+                auto: false,
+            },
+        })
+        return "ok"
+    })
+
     // quit
     ipcMain.on('quit', () => {
         app.quit()

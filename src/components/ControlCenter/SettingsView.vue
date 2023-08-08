@@ -196,9 +196,23 @@ class configModel {
 const config = ref({} as configModel)
 window.electronAPI.getConfig().then((con : any)=> {
   config.value = con
-}, (err: Error) => {
+}, () => {
   config.value = {} as configModel
 })
+// update
+class updateInfoModel {
+  version: string = ''
+  skip: boolean = false
+  auto: boolean = false
+}
+const updateInfo = ref({} as updateInfoModel)
+window.electronAPI.getUpdateInfo().then((info : any)=> {
+  updateInfo.value = info
+}, (err: Error) => {
+  console.log(err)
+})
+
+// service
 function openConfig(){
   window.electronAPI.openConfig()
 }
@@ -220,6 +234,7 @@ function updateConfig() {
   const configClone = JSON.parse(JSON.stringify(config.value))
   window.electronAPI.updateConfig(configClone).then((result : any)=> {
     if (result=='ok'){
+
       // update info
       const updateInfoClone = JSON.parse(JSON.stringify(updateInfo.value))
       window.electronAPI.setUpdateInfo(updateInfoClone).then((infoResult : any)=> {
@@ -234,62 +249,84 @@ function updateConfig() {
           ).then(() => {
             window.electronAPI.quit()
           })
+
         }else{
           error(infoResult)
         }
       }, (err: Error) => {
-        error(Error)
+        error(err)
       })
+
     }else{
       error(result)
     }
   }, (err: Error) => {
-    error(Error)
+    error(err)
   })
 }
 function clearConfig(){
+  // config
   window.electronAPI.getConfig().then((con : any)=> {
     config.value = con
-  }, (err: Error) => {
+  }, () => {
     config.value = {} as configModel
+  })
+
+  // update
+  window.electronAPI.getUpdateInfo().then((info : any)=> {
+    updateInfo.value = info
+  }, (err: Error) => {
+    console.log(err)
   })
 }
 function resetConfig(){
-  window.electronAPI.resetConfig().then((result : any)=> {
+
+  const error = (err:any)=> {
     ElMessageBox.alert(
-        'Configuration saved successfully. Please restart the application to take effect.',
-        'Notification',
-        {
-          confirmButtonText: 'OK',
-          type: 'success',
-        }
-    ).then(() => {
-      window.electronAPI.quit()
-    })
-  }, (err: Error) => {
-    ElMessageBox.alert(
-        'Configuration saved failed. Please try again. error: ' + err.message,
+        'Configuration saved failed. Please try again. error: ' + err,
         'Notification',
         {
           confirmButtonText: 'OK',
           type: 'error',
         }
     )
+  }
+  // config
+  window.electronAPI.resetConfig().then((result : any)=> {
+    if (result=='ok'){
+
+      // update info
+      window.electronAPI.resetUpdateInfo().then((result : any)=> {
+        if (result=='ok'){
+          ElMessageBox.alert(
+              'Configuration saved successfully. Please restart the application to take effect.',
+              'Notification',
+              {
+                confirmButtonText: 'OK',
+                type: 'success',
+              }
+          ).then(() => {
+            window.electronAPI.quit()
+          }, (err: Error) => {
+            error(err)
+          })
+
+        }else{
+          error(result)
+        }
+
+      }, (err: Error) => {
+        error(err)
+      })
+
+    }else{
+      error(result)
+    }
+
+  }, (err: Error) => {
+    error(err)
   })
 }
-
-// update
-class updateInfoModel {
-  version: string = ''
-  skip: boolean = false
-  auto: boolean = false
-}
-const updateInfo = ref({} as updateInfoModel)
-window.electronAPI.getUpdateInfo().then((info : any)=> {
-  updateInfo.value = info
-}, (err: Error) => {
-  console.log(err)
-})
 
 
 </script>

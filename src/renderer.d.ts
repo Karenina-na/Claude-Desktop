@@ -3,6 +3,7 @@
 export interface IElectronAPI {
     getUpdateInfo: () => Promise<any>,
     setUpdateInfo: (arg: any) => Promise<any>,
+    resetUpdateInfo: () => Promise<any>,
     quit: () => void,
     getConfigPath: () => Promise<void>,
     getConfig: () => Promise<void>,
