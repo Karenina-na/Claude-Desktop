@@ -1,6 +1,8 @@
 // if you need to add some types for electron, you can add here
 // for electron ipcRenderer
 export interface IElectronAPI {
+    getUpdateInfo: () => Promise<any>,
+    setUpdateInfo: (arg: any) => Promise<any>,
     quit: () => void,
     getConfigPath: () => Promise<void>,
     getConfig: () => Promise<void>,

@@ -4,6 +4,7 @@ import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path from "path";
 import Config from "../public/configModel";
 import {autoUpdateInit} from "./autoUpdater";
+import {getLocalData, setLocalData} from "./helper";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
@@ -124,6 +125,39 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
 
     const { ipcMain } = require('electron')
+
+    // get update info
+    ipcMain.handle('getUpdateInfo', () => {
+        let { updater } = getLocalData()
+        let { auto, version: ver, skip } = updater || {}
+        if (auto) {
+            // file exists
+            return { auto, ver, skip }
+        }else{
+            // file not exists
+            let updaterData = {
+                version: app.getVersion(),
+                skip: false,
+                auto: false,
+            }
+            setLocalData({
+                updater: {
+                    ...updaterData,
+                },
+            })
+            return { auto: false, version: app.getVersion() , skip: false }
+        }
+    })
+
+    // set update info
+    ipcMain.handle('setUpdateInfo', (event, arg) => {
+        setLocalData({
+            updater: {
+                ...arg,
+            },
+        })
+        return "ok";
+    })
 
     // quit
     ipcMain.on('quit', () => {
