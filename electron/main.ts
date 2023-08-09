@@ -1,4 +1,4 @@
-import {app, BrowserWindow, Menu, protocol, Tray} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu, protocol, shell, Tray} from 'electron'
 import menuTemplate from "./menu";
 import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path from "path";
@@ -126,6 +126,23 @@ app.whenReady().then(() => {
 
     const { ipcMain } = require('electron')
 
+    // quit
+    ipcMain.on('quit', () => {
+        app.quit()
+    })
+
+    // get config path
+    ipcMain.handle('getConfigPath', () => {
+        return path.join(app.getPath('home'), '.claude')
+    })
+
+    // open config
+    ipcMain.on('openConfig', () => {
+        const configDir = path.join(app.getPath('home'), '.claude');
+        const { shell } = require('electron')
+        shell.openPath(configDir).then(r => console.log(r))
+    })
+
     // get update info
     ipcMain.handle('getUpdateInfo', () => {
         let { updater } = getLocalData()
@@ -171,28 +188,9 @@ app.whenReady().then(() => {
         return "ok"
     })
 
-    // quit
-    ipcMain.on('quit', () => {
-        app.quit()
-    })
-
-    // get config path
-    ipcMain.handle('getConfigPath', () => {
-        const configDir = path.join(app.getPath('home'), '.claude');
-        return path.join(configDir, 'config.json')
-    })
-
     // get config
     ipcMain.handle('getConfig', () => {
         return ConfigFactory();
-    })
-
-    // open config
-    ipcMain.on('openConfig', () => {
-        const configDir = path.join(app.getPath('home'), '.claude');
-        const configPath = path.join(configDir, 'config.json');
-        const { shell } = require('electron')
-        shell.openPath(configPath).then(r => console.log(r))
     })
 
     // update config
