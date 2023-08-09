@@ -1,9 +1,10 @@
-import {app, BrowserWindow, Menu, protocol, Tray} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu, protocol, shell, Tray} from 'electron'
 import menuTemplate from "./menu";
 import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path from "path";
 import Config from "../public/configModel";
 import {autoUpdateInit} from "./autoUpdater";
+import {getLocalData, setLocalData} from "./helper";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
@@ -132,21 +133,64 @@ app.whenReady().then(() => {
 
     // get config path
     ipcMain.handle('getConfigPath', () => {
-        const configDir = path.join(app.getPath('home'), '.claude');
-        return path.join(configDir, 'config.json')
-    })
-
-    // get config
-    ipcMain.handle('getConfig', () => {
-        return ConfigFactory();
+        return path.join(app.getPath('home'), '.claude')
     })
 
     // open config
     ipcMain.on('openConfig', () => {
         const configDir = path.join(app.getPath('home'), '.claude');
-        const configPath = path.join(configDir, 'config.json');
         const { shell } = require('electron')
-        shell.openPath(configPath).then(r => console.log(r))
+        shell.openPath(configDir).then(r => console.log(r))
+    })
+
+    // get update info
+    ipcMain.handle('getUpdateInfo', () => {
+        let { updater } = getLocalData()
+        let { auto, version: ver, skip } = updater || {}
+        if (auto) {
+            // file exists
+            return { auto, ver, skip }
+        }else{
+            // file not exists
+            let updaterData = {
+                version: app.getVersion(),
+                skip: false,
+                auto: false,
+            }
+            setLocalData({
+                updater: {
+                    ...updaterData,
+                },
+            })
+            return { auto: false, version: app.getVersion() , skip: false }
+        }
+    })
+
+    // set update info
+    ipcMain.handle('setUpdateInfo', (event, arg) => {
+        setLocalData({
+            updater: {
+                ...arg,
+            },
+        })
+        return "ok";
+    })
+
+    // reset update info
+    ipcMain.handle('resetUpdateInfo', () => {
+        setLocalData({
+            updater: {
+                version: app.getVersion(),
+                skip: false,
+                auto: false,
+            },
+        })
+        return "ok"
+    })
+
+    // get config
+    ipcMain.handle('getConfig', () => {
+        return ConfigFactory();
     })
 
     // update config

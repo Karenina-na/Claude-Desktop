@@ -97,6 +97,34 @@
 
 
         </el-tab-pane>
+
+        <el-tab-pane label="Update" name="Update">
+          <!-- auto update -->
+          <div class="control-center-setting-items">
+            <span>Auto Update:</span>
+            <el-switch
+                v-model="updateInfo.auto"
+                class="control-center-setting-items-value"
+                style="--el-switch-on-color: rgba(19,206,102,0.6); --el-switch-off-color: rgba(255,73,73,0.6)"
+            />
+          </div>
+
+          <!-- skip next version -->
+          <div class="control-center-setting-items">
+            <span>Skip Next Version:</span>
+            <el-switch
+                v-model="updateInfo.skip"
+                class="control-center-setting-items-value"
+                style="--el-switch-on-color: rgba(19,206,102,0.6); --el-switch-off-color: rgba(255,73,73,0.6)"
+            />
+          </div>
+
+          <!-- current version -->
+          <div class="control-center-setting-items">
+            <span>Current Version:</span>
+            <div class="control-center-setting-items-value" style="width:40px">{{ updateInfo.version }}</div>
+          </div>
+        </el-tab-pane>
       </el-tabs>
 
       <div class="control-center-setting-bottom">
@@ -168,70 +196,137 @@ class configModel {
 const config = ref({} as configModel)
 window.electronAPI.getConfig().then((con : any)=> {
   config.value = con
-}, (err: Error) => {
+}, () => {
   config.value = {} as configModel
 })
+// update
+class updateInfoModel {
+  version: string = ''
+  skip: boolean = false
+  auto: boolean = false
+}
+const updateInfo = ref({} as updateInfoModel)
+window.electronAPI.getUpdateInfo().then((info : any)=> {
+  updateInfo.value = info
+}, (err: Error) => {
+  console.log(err)
+})
+
+// service
 function openConfig(){
   window.electronAPI.openConfig()
 }
 function updateConfig() {
-  if (config.value === undefined) return
+
+  // err msg
+  const error = (err:any)=> {
+    ElMessageBox.alert(
+        'Configuration saved failed. Please try again. error: ' + err,
+        'Notification',
+        {
+          confirmButtonText: 'OK',
+          type: 'error',
+        }
+    )
+  }
+
+  // config
   const configClone = JSON.parse(JSON.stringify(config.value))
   window.electronAPI.updateConfig(configClone).then((result : any)=> {
     if (result=='ok'){
-      ElMessageBox.alert(
-          'Configuration saved successfully. Please restart the application to take effect.',
-          'Notification',
-          {
-            confirmButtonText: 'OK',
-            type: 'success',
-          }
-      ).then(() => {
-        window.electronAPI.quit()
+
+      // update info
+      const updateInfoClone = JSON.parse(JSON.stringify(updateInfo.value))
+      window.electronAPI.setUpdateInfo(updateInfoClone).then((infoResult : any)=> {
+        if (infoResult=='ok'){
+          ElMessageBox.alert(
+              'Configuration saved successfully. Please restart the application to take effect.',
+              'Notification',
+              {
+                confirmButtonText: 'OK',
+                type: 'success',
+              }
+          ).then(() => {
+            window.electronAPI.quit()
+          })
+
+        }else{
+          error(infoResult)
+        }
+      }, (err: Error) => {
+        error(err)
       })
+
+    }else{
+      error(result)
     }
   }, (err: Error) => {
-    ElMessageBox.alert(
-        'Configuration saved failed. Please try again. error: ' + err.message,
-        'Notification',
-        {
-          confirmButtonText: 'OK',
-          type: 'error',
-        }
-    )
+    error(err)
   })
 }
 function clearConfig(){
+  // config
   window.electronAPI.getConfig().then((con : any)=> {
     config.value = con
-  }, (err: Error) => {
+  }, () => {
     config.value = {} as configModel
+  })
+
+  // update
+  window.electronAPI.getUpdateInfo().then((info : any)=> {
+    updateInfo.value = info
+  }, (err: Error) => {
+    console.log(err)
   })
 }
 function resetConfig(){
-  window.electronAPI.resetConfig().then((result : any)=> {
+
+  const error = (err:any)=> {
     ElMessageBox.alert(
-        'Configuration saved successfully. Please restart the application to take effect.',
-        'Notification',
-        {
-          confirmButtonText: 'OK',
-          type: 'success',
-        }
-    ).then(() => {
-      window.electronAPI.quit()
-    })
-  }, (err: Error) => {
-    ElMessageBox.alert(
-        'Configuration saved failed. Please try again. error: ' + err.message,
+        'Configuration saved failed. Please try again. error: ' + err,
         'Notification',
         {
           confirmButtonText: 'OK',
           type: 'error',
         }
     )
+  }
+  // config
+  window.electronAPI.resetConfig().then((result : any)=> {
+    if (result=='ok'){
+
+      // update info
+      window.electronAPI.resetUpdateInfo().then((result : any)=> {
+        if (result=='ok'){
+          ElMessageBox.alert(
+              'Configuration saved successfully. Please restart the application to take effect.',
+              'Notification',
+              {
+                confirmButtonText: 'OK',
+                type: 'success',
+              }
+          ).then(() => {
+            window.electronAPI.quit()
+          }, (err: Error) => {
+            error(err)
+          })
+
+        }else{
+          error(result)
+        }
+
+      }, (err: Error) => {
+        error(err)
+      })
+
+    }else{
+      error(result)
+    }
+
+  }, (err: Error) => {
+    error(err)
   })
 }
-
 
 
 </script>
