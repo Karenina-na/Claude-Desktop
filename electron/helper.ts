@@ -3,7 +3,7 @@
 import { join } from 'path'
 import fs from 'fs'
 import { app } from 'electron'
-const dataPath = join(join(app.getPath('home'), '.claude'), 'data.json')
+const dataPath = join(join(app.getPath('home'), '.claude'), 'updateInfo.json')
 
 function getLocalData(key?:any) {
     if (!fs.existsSync(dataPath)) {
