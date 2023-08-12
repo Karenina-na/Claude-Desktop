@@ -1,10 +1,16 @@
 import {app, BrowserWindow, ipcMain, Menu, protocol, shell, Tray} from 'electron'
 import menuTemplate from "./menu";
 import {ConfigFactory, ConfigUpdate} from "../public/config"
-import path from "path";
+import path, {join} from "path";
 import Config from "../public/configModel";
 import {autoUpdateInit} from "./update/autoUpdater";
 import {getLocalData, setLocalData} from "./update/helperUpdater";
+import logger from 'electron-log'
+
+// log
+logger.transports.file.maxSize = 1002430 // 10M
+logger.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}';
+logger.transports.file.resolvePath = () => join(path.join(app.getPath('home'), '.claude'), 'logs/claude.log')
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
@@ -140,7 +146,7 @@ app.whenReady().then(() => {
     ipcMain.on('openConfig', () => {
         const configDir = path.join(app.getPath('home'), '.claude');
         const { shell } = require('electron')
-        shell.openPath(configDir).then(r => console.log(r))
+        shell.openPath(configDir).then(r => logger.info(r))
     })
 
     // get update info
@@ -207,5 +213,5 @@ app.whenReady().then(() => {
     })
 
     // auto update
-    autoUpdateInit().then((r: any) => {console.log(r);});
+    autoUpdateInit().then((r: any) => logger.info(r));
 })

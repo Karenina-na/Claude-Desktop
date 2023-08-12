@@ -9,11 +9,6 @@ import path from "path";
 import { getLocalData, setLocalData, sleep } from './helperUpdater'
 
 export async function autoUpdateInit() {
-    // log
-    logger.transports.file.maxSize = 1002430 // 10M
-    logger.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}';
-    logger.transports.file.resolvePath = () => join(path.join(app.getPath('home'), '.claude'), 'logs/claude.log')
-
     autoUpdater.logger = logger
     autoUpdater.disableWebInstaller = false
     autoUpdater.autoDownload = false // Please write this as "false." When written as "true," I am encountering a permission issue and unable to determine the exact cause.
