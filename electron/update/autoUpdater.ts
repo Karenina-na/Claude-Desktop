@@ -4,9 +4,9 @@ import { app, dialog } from 'electron'
 import { join } from 'path'
 import { autoUpdater } from 'electron-updater'
 import logger from 'electron-log'
-import { name } from '../package.json'
+import { name } from '../../package.json'
 import path from "path";
-import { getLocalData, setLocalData, sleep } from './helper'
+import { getLocalData, setLocalData, sleep } from './helperUpdater'
 
 export async function autoUpdateInit() {
     // log

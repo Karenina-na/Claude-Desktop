@@ -3,8 +3,8 @@ import menuTemplate from "./menu";
 import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path from "path";
 import Config from "../public/configModel";
-import {autoUpdateInit} from "./autoUpdater";
-import {getLocalData, setLocalData} from "./helper";
+import {autoUpdateInit} from "./update/autoUpdater";
+import {getLocalData, setLocalData} from "./update/helperUpdater";
 
 app.commandLine.appendSwitch("--ignore-certificate-errors", "true");
 // Scheme must be registered before the app is ready
