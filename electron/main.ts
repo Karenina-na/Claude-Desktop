@@ -5,7 +5,7 @@ import path, {join} from "path";
 import Config from "../public/configModel";
 import {autoUpdateInit} from "./update/autoUpdater";
 import {getLocalData, setLocalData} from "./update/helperUpdater";
-import { promptUrl, promptPath, downloadAndGetPrompt, setPromptInfo, resetPromptInfo, syncPromptInfo,} from "./prompt/prompt";
+import { promptUrl, downloadAndGetPrompt, setPromptInfo, resetPromptInfo, syncPromptInfo,} from "./prompt/prompt";
 import logger from 'electron-log'
 
 // log
@@ -213,25 +213,30 @@ app.whenReady().then(() => {
         return "ok"
     })
 
+    // get prompt url
+    ipcMain.handle('getPromptUrl', () => {
+        return promptUrl;
+    })
+
     // get prompt
     ipcMain.handle('getPrompt', () => {
-        return downloadAndGetPrompt();
+        return downloadAndGetPrompt(config.prompt_path);
     })
 
     // set prompt
     ipcMain.handle('setPrompt', (event, arg) => {
-        setPromptInfo(arg);
+        setPromptInfo(config.prompt_path, arg);
         return "ok";
     })
 
     // reset prompt
     ipcMain.handle('resetPrompt', () => {
-        return resetPromptInfo();
+        return resetPromptInfo(config.prompt_path);
     })
 
     // sync prompt
     ipcMain.handle('syncPrompt', () => {
-        syncPromptInfo().then(r => logger.info(r)).catch(e => logger.error(e));
+        syncPromptInfo(config.prompt_path).then(r => logger.info(r)).catch(e => logger.error(e));
         return "ok"
     })
 

@@ -1,18 +1,17 @@
 import {join} from 'path'
 import fs from 'fs'
-import {app} from 'electron'
 import logger from 'electron-log'
 import https from "https";
 
 const promptUrl = 'https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv'
-const promptPath = join(join(app.getPath('home'), '.claude'), 'prompt')
-const promptInfo = join(promptPath, 'promptInfo.json')
+// const promptPath = join(app.getPath('home'), '.claude', 'prompt')
+// const promptInfo = join(promptPath, 'promptInfo.json')
 
-function downloadAndGetPrompt() {
-
+function downloadAndGetPrompt(promptPath:string) {
+    const promptInfo = join(promptPath, 'promptInfo.json')
     // csv
     if (!fs.existsSync(join(promptPath, 'prompts.csv'))) {
-        downloadPrompt().then(r => logger.info(r)).catch(e => logger.error(e))
+        downloadPrompt(promptPath).then(r => logger.info(r)).catch(e => logger.error(e))
     }
 
     let promptList = []
@@ -42,7 +41,7 @@ function downloadAndGetPrompt() {
     return promptList
 }
 
-async function downloadPrompt() {
+async function downloadPrompt(promptPath:string) {
     const file = fs.createWriteStream(join(promptPath, 'prompts.csv'))
     logger.info('downloading prompts.csv')
     https.get(promptUrl, function (response) {
@@ -60,11 +59,13 @@ async function downloadPrompt() {
     })
 }
 
-function setPromptInfo(promptList:any[]) {
+function setPromptInfo(promptPath:string,promptList:any[]) {
+    const promptInfo = join(promptPath, 'promptInfo.json')
     fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
 }
 
-function resetPromptInfo() {
+function resetPromptInfo(promptPath:string) {
+    const promptInfo = join(promptPath, 'promptInfo.json')
     let promptList = []
     if (fs.existsSync(join(promptPath, 'prompts.csv'))) {
         // update json
@@ -84,14 +85,15 @@ function resetPromptInfo() {
         fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
     }else{
         // download csv
-        downloadPrompt().then(r => logger.info(r)).catch(e => logger.error(e))
+        downloadPrompt(promptPath).then(r => logger.info(r)).catch(e => logger.error(e))
     }
     return promptList
 }
 
-async function syncPromptInfo() {
+async function syncPromptInfo(promptPath:string) {
+    const promptInfo = join(promptPath, 'promptInfo.json')
     // download
-    await downloadPrompt()
+    await downloadPrompt(promptPath)
     // update json
     let promptList = []
     if (fs.existsSync(join(promptPath, 'prompts.csv'))) {
@@ -115,7 +117,6 @@ async function syncPromptInfo() {
 
 export {
     promptUrl,
-    promptPath,
     downloadAndGetPrompt,
     setPromptInfo,
     resetPromptInfo,
