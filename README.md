@@ -20,7 +20,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone git@github.com:Karenina-na/Claude-Desktop.git
+git clone https://github.com/Karenina-na/Claude-Desktop.git
 # Go into the repository
 cd Claude-Desktop
 # Install dependencies
