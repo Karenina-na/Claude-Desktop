@@ -1,6 +1,10 @@
 <template>
   <div class="control-center-prompt-container">
-    <div class="control-center-prompt-title">
+    <div  class="control-center-prompt-title">
+      URL: &nbsp;&nbsp;<span @click="copyURL()">{{ promptURL }}</span>
+      Cache: &nbsp;&nbsp;<span @click="openPrompt()">{{ promptDir }}</span>
+    </div>
+    <div class="control-center-prompt-button">
       <!-- sync -->
       <el-popconfirm
           width="260"
@@ -53,9 +57,60 @@
 import { ref } from 'vue';
 import {ElMessageBox} from "element-plus";
 
-let prompt = ref('')
+// url
+const promptURL = ref('')
+window.electronAPI.getPromptURL().then((url : any)=> {
+  promptURL.value = url
+}, (err) => {
+  console.log(err)
+})
+function copyURL(){
+  navigator.clipboard.writeText(promptURL.value).then(() => {
+        // success msg
+        ElMessageBox.alert(
+            'URL copied successfully.',
+            'Notification',
+            {
+              confirmButtonText: 'OK',
+              type: 'success',
+            }
+        )
+      })
+      .catch(err => {
+        // err msg
+        ElMessageBox.alert(
+            'URL copied failed. Please try again. error: ' + err,
+            'Notification',
+            {
+              confirmButtonText: 'OK',
+              type: 'error',
+            }
+        )
+      })
+}
+
+// dir
+const promptDir = ref('')
+class configModel {
+  _stay_on_top: boolean = false
+  _tray: boolean = false
+  _theme: string = 'light'
+  _ua_tray: string = ''
+  _prompt_path: string = ''
+  _main_width: number = 0
+  _main_height: number = 0
+}
+window.electronAPI.getConfig().then((con : any)=> {
+  promptDir.value = con._prompt_path
+}, () => {
+  promptDir.value = ""
+})
+function openPrompt(){
+  window.electronAPI.openPrompt()
+}
 
 // prompt
+let prompt = ref('')
 window.electronAPI.getPrompt().then((con : any)=> {
   prompt.value = con
 }, (err) => {
@@ -192,7 +247,7 @@ function resetPrompt() {
 }
 
 /* top */
-.control-center-prompt-title{
+.control-center-prompt-button{
   margin: 16px 50px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);

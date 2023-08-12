@@ -214,8 +214,14 @@ app.whenReady().then(() => {
     })
 
     // get prompt url
-    ipcMain.handle('getPromptUrl', () => {
+    ipcMain.handle('getPromptURL', () => {
         return promptUrl;
+    })
+
+    // open prompt
+    ipcMain.on('openPrompt', () => {
+        const { shell } = require('electron')
+        shell.openExternal(config.prompt_path).then(r => logger.info(r))
     })
 
     // get prompt

@@ -11,6 +11,7 @@ export interface IElectronAPI {
     updateConfig: (config: any) => Promise<void>,
     resetConfig: () => Promise<void>,
     getPromptURL: () => Promise<void>,
+    openPrompt() : Promise<void>,
     getPrompt: () => Promise<any>,
     setPrompt: (prompt: any) => Promise<void>,
     resetPrompt: () => Promise<any>,
