@@ -8,36 +8,116 @@ const promptUrl = 'https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/m
 const promptPath = join(join(app.getPath('home'), '.claude'), 'prompt')
 const promptInfo = join(promptPath, 'promptInfo.json')
 
-function getPrompt() {
-    if (!fs.existsSync(promptInfo)) {
-        fs.writeFileSync(promptInfo, JSON.stringify({}), { encoding: 'utf-8' })
+function downloadAndGetPrompt() {
 
-        // download
-        logger.info('downloading prompt...')
-        downloadPrompt().then(r => {
-            logger.info('download prompt success')
-        }).catch(e => {
-            logger.error('download prompt failed')
-            logger.error(e)
-        })
+    // csv
+    if (!fs.existsSync(join(promptPath, 'prompts.csv'))) {
+        downloadPrompt().then(r => logger.info(r)).catch(e => logger.error(e))
     }
-    let data = fs.readFileSync(promptInfo, { encoding: 'utf-8' })
-    return JSON.parse(data)
+
+    let promptList = []
+
+    // make promptInfo.json
+    if (fs.existsSync(join(promptPath, 'prompts.csv')) && !fs.existsSync(promptInfo)) {
+        let data = fs.readFileSync(join(promptPath, 'prompts.csv'), { encoding: 'utf-8' })
+        let lines = data.split('\n')
+        for (let i = 1; i < lines.length; i++) {
+            let line = lines[i]
+            let [act, prompt] = line.split(',')
+            let info = {
+                CMD: act.toLowerCase().replace(/ /g, '_'),
+                ACT: act,
+                PROMPT: prompt,
+                ENABLE: true,
+            }
+            promptList.push(info)
+        }
+        fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
+    }else if (fs.existsSync(promptInfo)) {
+
+        // json exists
+        promptList = JSON.parse(fs.readFileSync(promptInfo, { encoding: 'utf-8' }))
+    }
+
+    return promptList
 }
 
 async function downloadPrompt() {
-    let data = await new Promise((resolve, reject) => {
-        https.get(promptUrl, (res) => {
-            let data = ''
-            res.on('data', (chunk) => {
-                data += chunk
-            })
-            res.on('end', () => {
-                resolve(data)
-            })
-        }).on('error', (e) => {
-            reject(e)
+    const file = fs.createWriteStream(join(promptPath, 'prompts.csv'))
+    logger.info('downloading prompts.csv')
+    https.get(promptUrl, function (response) {
+        response.pipe(file)
+    })
+    return new Promise((resolve, reject) => {
+        file.on('finish', function () {
+            logger.info('download prompts.csv finished')
+            resolve('ok')
+        })
+        file.on('error', function (err) {
+            logger.error(err)
+            reject(err)
         })
     })
-    console.log(data)
+}
+
+function setPromptInfo(promptList:any[]) {
+    fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
+}
+
+function resetPromptInfo() {
+    let promptList = []
+    if (fs.existsSync(join(promptPath, 'prompts.csv'))) {
+        // update json
+        let data = fs.readFileSync(join(promptPath, 'prompts.csv'), { encoding: 'utf-8' })
+        let lines = data.split('\n')
+        for (let i = 1; i < lines.length; i++) {
+            let line = lines[i]
+            let [act, prompt] = line.split(',')
+            let info = {
+                CMD: act.toLowerCase().replace(/ /g, '_'),
+                ACT: act,
+                PROMPT: prompt,
+                ENABLE: true,
+            }
+            promptList.push(info)
+        }
+        fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
+    }else{
+        // download csv
+        downloadPrompt().then(r => logger.info(r)).catch(e => logger.error(e))
+    }
+    return promptList
+}
+
+async function syncPromptInfo() {
+    // download
+    await downloadPrompt()
+    // update json
+    let promptList = []
+    if (fs.existsSync(join(promptPath, 'prompts.csv'))) {
+        // update json
+        let data = fs.readFileSync(join(promptPath, 'prompts.csv'), { encoding: 'utf-8' })
+        let lines = data.split('\n')
+        for (let i = 1; i < lines.length; i++) {
+            let line = lines[i]
+            let [act, prompt] = line.split(',')
+            let info = {
+                CMD: act.toLowerCase().replace(/ /g, '_'),
+                ACT: act,
+                PROMPT: prompt,
+                ENABLE: true,
+            }
+            promptList.push(info)
+        }
+        fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
+    }
+}
+
+export {
+    promptUrl,
+    promptPath,
+    downloadAndGetPrompt,
+    setPromptInfo,
+    resetPromptInfo,
+    syncPromptInfo,
 }

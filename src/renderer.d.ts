@@ -10,6 +10,10 @@ export interface IElectronAPI {
     getConfig: () => Promise<void>,
     updateConfig: (config: any) => Promise<void>,
     resetConfig: () => Promise<void>,
+    getPrompt: () => Promise<any>,
+    setPrompt: (prompt: any) => Promise<void>,
+    resetPrompt: () => Promise<any>,
+    syncPrompt: () => Promise<void>,
 }
 
 declare global {
