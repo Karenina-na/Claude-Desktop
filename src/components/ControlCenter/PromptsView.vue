@@ -1,8 +1,8 @@
 <template>
   <div class="control-center-prompt-container">
     <div  class="control-center-prompt-title">
-      URL: &nbsp;&nbsp;<span @click="copyURL()">{{ promptURL }}</span>
-      Cache: &nbsp;&nbsp;<span @click="openPrompt()">{{ promptDir }}</span>
+      <div>URL: &nbsp;&nbsp;<span @click="copyURL()">{{ promptURL }}</span></div>
+      <div>Cache: &nbsp;&nbsp;<span @click="openPrompt()">{{ promptDir }}</span></div>
     </div>
     <div class="control-center-prompt-button">
       <!-- sync -->
