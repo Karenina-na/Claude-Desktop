@@ -50,11 +50,61 @@
         </template>
       </el-popconfirm>
     </div>
+
+    <!-- prompt content -->
+    <div class="control-center-prompt-content">
+      <el-table
+          ref="multipleTableRef"
+          :data="paginate(prompt, pageSize, currentPage)"
+          @selection-change="handleSelectionChange"
+      >
+        <!-- selection -->
+        <el-table-column type="selection" width="40px" />
+        <!-- Type -->
+        <el-table-column label="Type" :width="typeWidth" show-overflow-tooltip>
+          <template #default="scope">{{ scope.row.CMD }}</template>
+        </el-table-column>
+        <!-- Act -->
+        <el-table-column  label="Act" :width="actWidth" show-overflow-tooltip>
+          <template #default="scope">{{ scope.row.ACT }}</template>
+        </el-table-column>
+        <!-- Enable -->
+        <el-table-column  label="Enable" width="120" >
+          <template #default="scope">
+            <el-switch
+                v-model="scope.row.ENABLE"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-icon-class="el-icon-check"
+                inactive-icon-class="el-icon-close"
+            />
+          </template>
+        </el-table-column>
+        <!-- Prompt -->
+        <el-table-column label="Prompt" show-overflow-tooltip>
+          <template #default="scope" >
+            <span @click="copyPrompt(scope.row.PROMPT)">{{ scope.row.PROMPT }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div class="demo-pagination-block">
+      <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[5, 10, 15, 20, 25]"
+          small="small"
+          layout="total, prev, pager, next, sizes, jumper"
+          :total="prompt.length"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
-
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref} from 'vue';
 import {ElMessageBox} from "element-plus";
 
 // url
@@ -110,9 +160,14 @@ function openPrompt(){
 }
 
 // prompt
-let prompt = ref('')
+let prompt = ref(Array())
 window.electronAPI.getPrompt().then((con : any)=> {
-  prompt.value = con
+  // 将con从json转为 array[{CMD, ACT,RPOMPT,ENABLE}]
+  let temp = Array()
+  for (let i in con) {
+    temp.push(con[i])
+  }
+  prompt.value = temp
 }, (err) => {
   console.log(err)
 })
@@ -236,6 +291,51 @@ function resetPrompt() {
   }, (err: Error) => {
     error(err)
   })
+}
+
+// page
+const currentPage = ref(1)
+const pageSize = ref(10)
+const typeWidth = ref('200px')
+const actWidth = ref('200px')
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`)
+}
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`)
+}
+function paginate<T>(arr: T[], pageSize: number, currentPage: number): T[] {
+  const start = pageSize * (currentPage-1);
+  return arr.slice(start, start + pageSize);
+}
+
+// prompt control
+function handleSelectionChange(val: any) {
+  console.log(val)
+}
+function copyPrompt(prompt:string){
+  navigator.clipboard.writeText(prompt).then(() => {
+    // success msg
+    ElMessageBox.alert(
+        'prompt copied successfully.',
+        'Notification',
+        {
+          confirmButtonText: 'OK',
+          type: 'success',
+        }
+    )
+  })
+      .catch(err => {
+        // err msg
+        ElMessageBox.alert(
+            'prompt copied failed. Please try again. error: ' + err,
+            'Notification',
+            {
+              confirmButtonText: 'OK',
+              type: 'error',
+            }
+        )
+      })
 }
 </script>
 
