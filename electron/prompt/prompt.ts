@@ -23,10 +23,13 @@ function downloadAndGetPrompt(promptPath:string) {
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
             let [act, prompt] = line.split(',')
+            if (act == undefined || prompt == undefined) {
+                continue
+            }
             let info = {
-                CMD: act.toLowerCase().replace(/ /g, '_'),
-                ACT: act,
-                PROMPT: prompt,
+                CMD: act.toLowerCase().replace(/ /g, '_').replace(/\"/g, ''),
+                ACT: act.replace(/\"/g, ''),
+                PROMPT: prompt.replace(/\"/g, ''),
                 ENABLE: true,
             }
             promptList.push(info)
@@ -37,7 +40,7 @@ function downloadAndGetPrompt(promptPath:string) {
         // json exists
         promptList = JSON.parse(fs.readFileSync(promptInfo, { encoding: 'utf-8' }))
     }
-
+    console.log(promptList)
     return promptList
 }
 
