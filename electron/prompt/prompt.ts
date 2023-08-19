@@ -27,9 +27,9 @@ function downloadAndGetPrompt(promptPath:string) {
                 continue
             }
             let info = {
-                CMD: act.toLowerCase().replace(/ /g, '_').replace(/\"/g, ''),
-                ACT: act.replace(/\"/g, ''),
-                PROMPT: prompt.replace(/\"/g, ''),
+                CMD: act.toLowerCase().replace(/ /g, '_').replace(/"/g, ''),
+                ACT: act.replace(/"/g, ''),
+                PROMPT: prompt.replace(/"/g, ''),
                 ENABLE: true,
             }
             promptList.push(info)
