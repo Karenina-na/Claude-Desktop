@@ -12,7 +12,7 @@ function downloadAndGetPrompt(promptPath:string) {
     const promptInfo = join(promptPath, 'promptInfo.json')
     // csv
     if (!fs.existsSync(join(promptPath, 'prompts.csv'))) {
-        downloadPrompt(promptPath).then(r => logger.info(r)).catch(e => logger.error(e))
+        downloadPrompt(promptPath)
     }
 
     let promptList = []
@@ -44,21 +44,28 @@ function downloadAndGetPrompt(promptPath:string) {
     return promptList
 }
 
-async function downloadPrompt(promptPath:string) {
-    const file = fs.createWriteStream(join(promptPath, 'prompts.csv'))
-    logger.info('downloading prompts.csv')
-    https.get(promptUrl, function (response) {
+function downloadPrompt(promptPath:string) {
+    const file = fs.createWriteStream(join(promptPath, 'prompts.csv.temp'))
+    logger.info('downloading prompts.csv to prompts.csv.temp')
+    https.get(promptUrl, response=> {
         response.pipe(file)
-    })
-    return new Promise((resolve, reject) => {
-        file.on('finish', function () {
-            logger.info('download prompts.csv finished')
-            resolve('ok')
+
+        // finish
+        file.on('finish', ()=> {
+            file.close()
+            logger.info('download prompts.csv.temp success')
+            // rename
+            fs.renameSync(join(promptPath, 'prompts.csv.temp'), join(promptPath, 'prompts.csv'))
+            logger.info('rename prompts.csv.temp to prompts.csv success')
         })
-        file.on('error', function (err) {
+
+        // error
+        file.on('error', err=> {
             logger.error(err)
-            reject(err)
         })
+
+    }).on('error', err=> {
+        logger.error(err)
     })
 }
 
@@ -91,7 +98,7 @@ function resetPromptInfo(promptPath:string) {
         fs.writeFileSync(promptInfo, JSON.stringify(promptList, null, 4))
     }else{
         // download csv
-        downloadPrompt(promptPath).then(r => logger.info(r)).catch(e => logger.error(e))
+        downloadPrompt(promptPath)
     }
     return promptList
 }
