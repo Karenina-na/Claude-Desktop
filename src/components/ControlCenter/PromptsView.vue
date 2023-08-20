@@ -402,7 +402,7 @@ const tableContentBackground = () => {
   return {
     'backgroundColor': 'rgb(234,233,230, 0.6)',
     'color': '#595959',
-    'fontSize': '16px',
+    'fontSize': '15px',
   }
 }
 const tableHeaderBackground = ()=>{

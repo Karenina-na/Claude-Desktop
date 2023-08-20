@@ -36,7 +36,6 @@ declare module 'vue' {
     IEpDArrowRight: typeof import('~icons/ep/d-arrow-right')['default']
     IEpEdit: typeof import('~icons/ep/edit')['default']
     IEpMagicStick: typeof import('~icons/ep/magic-stick')['default']
-    IEpSelect: typeof import('~icons/ep/select')['default']
     IEpSetting: typeof import('~icons/ep/setting')['default']
     IEpWarning: typeof import('~icons/ep/warning')['default']
     NotesView: typeof import('./components/ControlCenter/NotesView.vue')['default']
