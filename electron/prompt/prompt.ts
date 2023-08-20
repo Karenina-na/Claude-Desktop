@@ -23,7 +23,8 @@ function downloadAndGetPrompt(promptPath:string) {
         let lines = data.split('\n')
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
-            let [act, prompt] = line.split(',')
+            // fix bug for csv
+            let [act, prompt] = line.split('","')
             if (act == undefined || prompt == undefined) {
                 continue
             }
@@ -83,7 +84,8 @@ function resetPromptInfo(promptPath:string) {
         let lines = data.split('\n')
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
-            let [act, prompt] = line.split(',')
+            // fix bug for csv
+            let [act, prompt] = line.split('","')
             if (act == undefined || prompt == undefined) {
                 continue
             }
@@ -115,7 +117,8 @@ async function syncPromptInfo(promptPath:string) {
         let lines = data.split('\n')
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
-            let [act, prompt] = line.split(',')
+            // fix bug for csv
+            let [act, prompt] = line.split('","')
             if (act == undefined || prompt == undefined) {
                 continue
             }
