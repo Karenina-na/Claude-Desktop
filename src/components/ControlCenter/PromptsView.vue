@@ -84,7 +84,7 @@
           <template #default="scope">{{ scope.row.ACT }}</template>
         </el-table-column>
         <!-- Enable -->
-        <el-table-column  label="Enable" width="70" >
+        <el-table-column label="Enable" width="75" >
           <template #default="scope">
             <el-switch
                 v-model="scope.row.ENABLE"
@@ -99,17 +99,18 @@
         <el-table-column label="Prompt">
           <template #default="scope" >
             <span @click="copyPrompt(scope.row.PROMPT)"
-                  style="width: 280px; display: inline-block;
+                  style="display: inline-block; width: 270px;
                   text-overflow: ellipsis; white-space: nowrap;
-                  overflow: visible;">{{ scope.row.PROMPT }}</span>
+                  overflow: hidden;">{{ scope.row.PROMPT }}</span>
           </template>
         </el-table-column>
 
+        <!-- expand -->
         <el-table-column type="expand">
           <template #default="scope">
-            <span>
+            <div class="control-center-prompt-expand">
               {{ scope.row.PROMPT }}
-            </span>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -120,7 +121,7 @@
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
           :page-sizes="[5, 10, 15, 20, 25]"
-          :small="true"
+          :background="true"
           layout="total, prev, pager, next, sizes, jumper"
           :total="prompt.length"
           @size-change="handleSizeChange"
@@ -394,14 +395,14 @@ const tableContentBackground = () => {
   return {
     'backgroundColor': 'rgb(234,233,230, 0.6)',
     'color': '#595959',
-    'fontSize': '15px',
+    'fontSize': '16px',
   }
 }
 const tableHeaderBackground = ()=>{
   return {
     'backgroundColor': 'rgba(234,233,230)',
     'color': '#595959',
-    'fontSize': '15px',
+    'fontSize': '16px',
   }
 }
 </script>
@@ -466,6 +467,22 @@ const tableHeaderBackground = ()=>{
 .control-center-prompt-content{
   width: 98%;
   margin: 10px auto;
+}
+
+.control-center-prompt-expand{
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+}
+
+/** bottom */
+.control-center-prompt-pagination-block{
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 </style>
