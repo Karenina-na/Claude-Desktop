@@ -7,6 +7,7 @@ const promptUrl = 'https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/m
 // const promptPath = join(app.getPath('home'), '.claude', 'prompt')
 // const promptInfo = join(promptPath, 'promptInfo.json')
 
+
 function downloadAndGetPrompt(promptPath:string) {
     const promptInfo = join(promptPath, 'promptInfo.json')
     // csv
@@ -76,10 +77,13 @@ function resetPromptInfo(promptPath:string) {
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
             let [act, prompt] = line.split(',')
+            if (act == undefined || prompt == undefined) {
+                continue
+            }
             let info = {
-                CMD: act.toLowerCase().replace(/ /g, '_'),
-                ACT: act,
-                PROMPT: prompt,
+                CMD: act.toLowerCase().replace(/ /g, '_').replace(/"/g, ''),
+                ACT: act.replace(/"/g, ''),
+                PROMPT: prompt.replace(/"/g, ''),
                 ENABLE: true,
             }
             promptList.push(info)
@@ -105,10 +109,13 @@ async function syncPromptInfo(promptPath:string) {
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i]
             let [act, prompt] = line.split(',')
+            if (act == undefined || prompt == undefined) {
+                continue
+            }
             let info = {
-                CMD: act.toLowerCase().replace(/ /g, '_'),
-                ACT: act,
-                PROMPT: prompt,
+                CMD: act.toLowerCase().replace(/ /g, '_').replace(/"/g, ''),
+                ACT: act.replace(/"/g, ''),
+                PROMPT: prompt.replace(/"/g, ''),
                 ENABLE: true,
             }
             promptList.push(info)
