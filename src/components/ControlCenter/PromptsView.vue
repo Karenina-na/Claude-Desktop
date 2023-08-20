@@ -94,7 +94,7 @@
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
           :page-sizes="[5, 10, 15, 20, 25]"
-          small="small"
+          :small="true"
           layout="total, prev, pager, next, sizes, jumper"
           :total="prompt.length"
           @size-change="handleSizeChange"
