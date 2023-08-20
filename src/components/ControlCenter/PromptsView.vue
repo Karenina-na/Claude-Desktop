@@ -98,15 +98,22 @@
         <!-- Prompt -->
         <el-table-column label="Prompt">
           <template #default="scope" >
+            <el-tooltip
+                content="Click to copy the prompt"
+                placement="top-end"
+                effect="dark"
+            >
             <span @click="copyPrompt(scope.row.PROMPT)"
                   style="display: inline-block; width: 100%;
                   text-overflow: ellipsis; white-space: nowrap;
-                  overflow: hidden;">{{ scope.row.PROMPT }}</span>
+                  overflow: hidden; user-select: none; cursor: pointer;"
+            >{{ scope.row.PROMPT }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
 
         <!-- expand -->
-        <el-table-column type="expand">
+        <el-table-column type="expand" label="<>">
           <template #default="scope">
             <div class="control-center-prompt-expand">
               {{ scope.row.PROMPT }}
