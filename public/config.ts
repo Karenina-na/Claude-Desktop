@@ -5,6 +5,7 @@ import { app} from "electron";
 import fs from "fs";
 import { dialog } from "electron";
 import configModel from "./configModel";
+import logger from "electron-log";
 
 
 // create and load config file
@@ -17,7 +18,10 @@ function ConfigFactory(){
     const configFile = path.join(configDir, 'config.json');
 
     // error dialog
-    const error  = (message:string) => {dialog.showErrorBox('Error', message)}
+    const error  = (message:string) => {
+        dialog.showErrorBox('Error', message)
+        logger.error(message)
+    }
 
     try{
         fs.statSync(configDir)
@@ -57,7 +61,10 @@ function ConfigUpdate(config: configModel){
     const configFile = path.join(configDir, 'config.json');
 
     // error dialog
-    const error  = (message:string) => {dialog.showErrorBox('Error', message)}
+    const error  = (message:string) => {
+        dialog.showErrorBox('Error', message)
+        logger.error(message)
+    }
 
     try{
         fs.statSync(configDir)

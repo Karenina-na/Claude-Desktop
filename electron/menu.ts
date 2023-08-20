@@ -3,6 +3,7 @@ import configModel from "../public/configModel";
 import path from "path";
 import {ConfigFactory, ConfigUpdate} from "../public/config";
 import {autoUpdater} from "electron-updater";
+import logger from "electron-log";
 
 let PromptWin: BrowserWindow | null = null;
 let ControlCenterWin: BrowserWindow | null = null;
@@ -41,7 +42,7 @@ export default function createMenu(config: configModel) {
                         });
                     }
                 },
-                {label: 'Check for Updates', click: () => {autoUpdater.checkForUpdates().then(r => {console.log(r)})}
+                {label: 'Check for Updates', click: () => {autoUpdater.checkForUpdates().then(r => logger.info(r)).catch(e => logger.error(e))},
                 },
                 {role: 'minimize', label: 'Hide', accelerator: 'ctrl+H'},
                 {type: 'separator'},

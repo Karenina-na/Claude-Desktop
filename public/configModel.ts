@@ -22,7 +22,7 @@ class Config{
         this._tray_width = 400;
         this._tray_height = 600;
         this._ua_tray = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
-        this._prompt_path = path.join(path.join(path.join(app.getPath('home'), '.claude'), 'config.json'), 'prompt');
+        this._prompt_path = path.join(path.join(app.getPath('home'), '.claude'), 'prompt');
 
         // create prompt dir
         try{

@@ -14,5 +14,11 @@ window.addEventListener('DOMContentLoaded', () => {
         openConfig: () => ipcRenderer.send('openConfig'),
         updateConfig: (config) => ipcRenderer.invoke('updateConfig', config),
         resetConfig: () => ipcRenderer.invoke('resetConfig'),
+        getPromptURL: () => ipcRenderer.invoke('getPromptURL'),
+        openPrompt: () => ipcRenderer.send('openPrompt'),
+        getPrompt: () => ipcRenderer.invoke('getPrompt'),
+        setPrompt: (prompt) => ipcRenderer.invoke('setPrompt', prompt),
+        resetPrompt: () => ipcRenderer.invoke('resetPrompt'),
+        syncPrompt: () => ipcRenderer.invoke('syncPrompt'),
     })
 })
