@@ -99,7 +99,7 @@
         <el-table-column label="Prompt">
           <template #default="scope" >
             <span @click="copyPrompt(scope.row.PROMPT)"
-                  style="display: inline-block; width: 270px;
+                  style="display: inline-block; width: 100%;
                   text-overflow: ellipsis; white-space: nowrap;
                   overflow: hidden;">{{ scope.row.PROMPT }}</span>
           </template>
