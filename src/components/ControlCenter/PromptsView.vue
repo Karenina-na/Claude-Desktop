@@ -1,9 +1,22 @@
 <template>
   <div class="control-center-prompt-container">
-    <div  class="control-center-prompt-title">
-      <div>URL: &nbsp;&nbsp;<span @click="copyURL()">{{ promptURL }}</span></div>
-      <div>Cache: &nbsp;&nbsp;<span @click="openPrompt()">{{ promptDir }}</span></div>
+    <div class="control-center-prompt-title">
+      <div class="control-center-prompt-title-left">
+        <div>URL: &nbsp;&nbsp;<span @click="copyURL()">{{ promptURL }}</span></div>
+        <div>Cache: &nbsp;&nbsp;<span @click="openPrompt()">{{ promptDir }}</span></div>
+      </div>
+      <div class="control-center-prompt-title-right">
+        <el-button-group>
+          <el-button type="success" plain @click="enable()">
+            <i-ep-check/>&nbsp;Enable
+          </el-button>
+          <el-button type="danger" plain @click="disable()">
+            <i-ep-close/>&nbsp;Disable
+          </el-button>
+        </el-button-group>
+      </div>
     </div>
+
     <div class="control-center-prompt-button">
       <!-- sync -->
       <el-popconfirm
@@ -57,11 +70,13 @@
           ref="multipleTableRef"
           :data="paginate(prompt, pageSize, currentPage)"
           @selection-change="handleSelectionChange"
+          :headerCellStyle ="tableHeaderBackground()"
+          :row-style="tableContentBackground()"
       >
         <!-- selection -->
-        <el-table-column type="selection" width="40px" />
+        <el-table-column type="selection" width="30px"/>
         <!-- Type -->
-        <el-table-column label="Type" :width="typeWidth" show-overflow-tooltip>
+        <el-table-column label="Type" :width="typeWidth" show-overflow-tooltip >
           <template #default="scope">{{ scope.row.CMD }}</template>
         </el-table-column>
         <!-- Act -->
@@ -69,7 +84,7 @@
           <template #default="scope">{{ scope.row.ACT }}</template>
         </el-table-column>
         <!-- Enable -->
-        <el-table-column  label="Enable" width="120" >
+        <el-table-column  label="Enable" width="70" >
           <template #default="scope">
             <el-switch
                 v-model="scope.row.ENABLE"
@@ -81,15 +96,26 @@
           </template>
         </el-table-column>
         <!-- Prompt -->
-        <el-table-column label="Prompt" show-overflow-tooltip>
+        <el-table-column label="Prompt">
           <template #default="scope" >
-            <span @click="copyPrompt(scope.row.PROMPT)">{{ scope.row.PROMPT }}</span>
+            <span @click="copyPrompt(scope.row.PROMPT)"
+                  style="width: 280px; display: inline-block;
+                  text-overflow: ellipsis; white-space: nowrap;
+                  overflow: visible;">{{ scope.row.PROMPT }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column type="expand">
+          <template #default="scope">
+            <span>
+              {{ scope.row.PROMPT }}
+            </span>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <div class="demo-pagination-block">
+    <div class="control-center-prompt-pagination-block">
       <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
@@ -105,7 +131,7 @@
 </template>
 <script setup lang="ts">
 import {ref} from 'vue';
-import {ElMessageBox} from "element-plus";
+import {ElMessageBox, ElNotification} from "element-plus";
 
 // url
 const promptURL = ref('')
@@ -296,8 +322,8 @@ function resetPrompt() {
 // page
 const currentPage = ref(1)
 const pageSize = ref(10)
-const typeWidth = ref('200px')
-const actWidth = ref('200px')
+const typeWidth = ref('220px')
+const actWidth = ref('220px')
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`)
 }
@@ -310,8 +336,15 @@ function paginate<T>(arr: T[], pageSize: number, currentPage: number): T[] {
 }
 
 // prompt control
-function handleSelectionChange(val: any) {
-  console.log(val)
+const selection = ref(Array())
+function handleSelectionChange(val: Array<any>) {
+  selection.value = []
+  val.forEach((item: any) => {
+    let index = prompt.value.findIndex((value: any) => {
+      return value.CMD === item.CMD
+    })
+    selection.value.push(index)
+  })
 }
 function copyPrompt(prompt:string){
   navigator.clipboard.writeText(prompt).then(() => {
@@ -337,6 +370,40 @@ function copyPrompt(prompt:string){
         )
       })
 }
+function enable(){
+  selection.value.forEach((item: any) => {
+    prompt.value[item].ENABLE = true
+  })
+  ElNotification.success({
+    title: 'Enabled successfully.',
+    message: "Please submit to take effect.",
+    position: 'bottom-right',
+  })
+}
+function disable(){
+  selection.value.forEach((item: any) => {
+    prompt.value[item].ENABLE = false
+  })
+  ElNotification.success({
+    title: 'Disabled successfully.',
+    message: "Please submit to take effect.",
+    position: 'bottom-right',
+  })
+}
+const tableContentBackground = () => {
+  return {
+    'backgroundColor': 'rgb(234,233,230, 0.6)',
+    'color': '#595959',
+    'fontSize': '15px',
+  }
+}
+const tableHeaderBackground = ()=>{
+  return {
+    'backgroundColor': 'rgba(234,233,230)',
+    'color': '#595959',
+    'fontSize': '15px',
+  }
+}
 </script>
 
 <style scoped>
@@ -344,15 +411,61 @@ function copyPrompt(prompt:string){
 .control-center-prompt-container{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-user-select: none;
+  user-select: none;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 /* top */
+.control-center-prompt-title{
+  display : flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.control-center-prompt-title-left{
+  font-size: 16px;
+  font-weight: 500;
+  margin: 5px 10px;
+}
+
+.control-center-prompt-title-left div{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display : flex;
+  flex-direction: row;
+}
+.control-center-prompt-title-left div span{
+  cursor: pointer;
+  color: #b78607;
+  transition: all 0.2s;
+}
+.control-center-prompt-title-left div span:hover{
+  color: #00c7b1;
+  transition: all 0.2s;
+}
+
+.control-center-prompt-title-right{
+  display : flex;
+  align-items: center;
+}
+
 .control-center-prompt-button{
-  margin: 16px 50px;
+  margin: 5px 50px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr;
   grid-column-gap: 0;
   grid-row-gap: 0;
 }
+
+/** prompt */
+.control-center-prompt-content{
+  width: 98%;
+  margin: 10px auto;
+}
+
 </style>
