@@ -77,11 +77,11 @@
         <el-table-column type="selection" width="30px"/>
         <!-- Type -->
         <el-table-column label="Type" :width="typeWidth" show-overflow-tooltip >
-          <template #default="scope">{{ scope.row.CMD }}</template>
+          <template #default="scope"><span style="font-size:14px;">{{ scope.row.CMD }}</span></template>
         </el-table-column>
         <!-- Act -->
         <el-table-column  label="Act" :width="actWidth" show-overflow-tooltip>
-          <template #default="scope">{{ scope.row.ACT }}</template>
+          <template #default="scope" ><span style="font-size:14px;">{{ scope.row.ACT }}</span></template>
         </el-table-column>
         <!-- Enable -->
         <el-table-column label="Enable" width="75" >
@@ -104,7 +104,7 @@
                 effect="dark"
             >
             <span @click="copyPrompt(scope.row.PROMPT)"
-                  style="display: inline-block; width: 100%;
+                  style="display: inline-block; width: 100%; font-size:14px;
                   text-overflow: ellipsis; white-space: nowrap;
                   overflow: hidden; user-select: none; cursor: pointer;"
             >{{ scope.row.PROMPT }}</span>
@@ -434,7 +434,7 @@ const tableHeaderBackground = ()=>{
 }
 
 .control-center-prompt-title-left{
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   margin: 5px 10px;
 }
