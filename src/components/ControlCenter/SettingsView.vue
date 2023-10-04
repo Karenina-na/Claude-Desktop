@@ -341,7 +341,7 @@ function resetConfig(){
 /* header */
 .control-center-setting-config-path{
   margin: 8px 0 0 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -375,7 +375,7 @@ function resetConfig(){
 }
 
 .control-center-setting-items span {
-  font-size: 16px;
+  font-size: 15px;
   padding-right: 40px;
   justify-self: end;
   align-self: center;

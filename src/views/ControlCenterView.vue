@@ -140,7 +140,7 @@ function choiceItem(value:string){
 
 </script>
 
-<style>
+<style scoped>
 /* contains */
 .control-center-container, .control-aside-container, .control-center-main-container{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -178,7 +178,7 @@ function choiceItem(value:string){
   user-select: none;
   margin: 4px 4px 0;
   width: 60px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
   border: 1px solid #9b9b9b;
   border-radius: 6px;
@@ -187,7 +187,7 @@ function choiceItem(value:string){
 /* aside */
 .control-aside-icon{
   margin: 0 0 0 8px;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 100;
   padding-right: 10px;
   padding-bottom: 3px;
