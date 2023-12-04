@@ -1,5 +1,31 @@
 // This is referenced from https://github.com/lencx/ChatGPT/blob/main/scripts/cmd.js
 
+/*
+<div class="chat-prompt-cmd-list">
+    <div class="cmd-item">
+        <b>/prompt-name</b>
+        <i>prompt-name</i>
+    </div>
+    <div class="cmd-item">
+    ...
+    </div>
+</div>
+
+javascript:
+
+let cmdList = [
+    {cmd: '/prompt-name', desc: 'prompt-name'},
+    {cmd: '/prompt-name', desc: 'prompt-name'},
+    ]
+cmdList.forEach(item => {
+    let div = document.createElement('div');
+    div.setAttribute('class', 'cmd-item');
+    div.innerHTML = `<b>${item.cmd}</b><i>${item.desc}</i>`;
+    dev.appendChild(div);
+})
+
+* */
+
 export default function cmdInit(){
     const styleDom = document.createElement('style');
     styleDom.innerHTML = `
@@ -51,12 +77,22 @@ export default function cmdInit(){
     `
     document.head.append(styleDom);
 
-    console.log('prepare execute code');
     let fieldset = document.getElementsByTagName('fieldset')[0];
-    // 创建一个dev，输入123
-    let dev = document.createElement('input');
-    dev.setAttribute('id', 'dev');
-    dev.setAttribute('type', 'text');
-    dev.setAttribute('value', '123');
+
+    // check if fieldset exists
+    if (!fieldset) {
+        console.error('fieldset not found');
+        return;
+    }
+
+    // check if cmd-list already exists
+    if (document.getElementsByClassName('chat-prompt-cmd-list')[0]) {
+        console.log('cmd-list already exists');
+        return;
+    }
+
+    let dev = document.createElement('div');
+    dev.setAttribute('class', 'chat-prompt-cmd-list');
     fieldset.appendChild(dev);
+    console.log('cmd-list created');
 }
