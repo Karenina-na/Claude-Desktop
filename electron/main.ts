@@ -1,5 +1,6 @@
 import {app, BrowserWindow, ipcMain, Menu, protocol, shell, Tray} from 'electron'
 import menuTemplate from "./menu";
+import cmdInit from "./cmd";
 import {ConfigFactory, ConfigUpdate} from "../public/config"
 import path, {join} from "path";
 import Config from "../public/configModel";
@@ -42,7 +43,20 @@ app.whenReady().then(() => {
     session.setUserAgent(config.ua_tray);
 
     // load url
-    win.loadURL('https://claude.ai/chat/')
+    win.loadURL('https://claude.ai/chat/').then(r =>{
+        // 执行cmdInit
+        !win.webContents.executeJavaScript(
+            `
+            if(!window.__cmdInit__){
+                window.__cmdInit__ = true;
+                ${cmdInit.toString()}
+                cmdInit();
+            }
+            `
+        ) && logger.error('cmdInit failed')
+        }
+
+    ).catch(e => logger.error(e));
 
     // tray
     createTray(win);
