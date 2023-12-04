@@ -26,7 +26,8 @@ cmdList.forEach(item => {
 
 * */
 
-export default function cmdInit(){
+
+export default async function cmdInit() {
     const styleDom = document.createElement('style');
     styleDom.innerHTML = `
     .chat-prompt-cmd-list {
@@ -81,18 +82,34 @@ export default function cmdInit(){
 
     // check if fieldset exists
     if (!fieldset) {
-        console.error('fieldset not found');
-        return;
+        // wait for fieldset
+        while (true) {
+            fieldset = document.getElementsByTagName('fieldset')[0];
+            if (fieldset) {
+                break;
+            }
+            // wait 1s
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        fieldset = document.getElementsByTagName('fieldset')[0];
     }
+
+    // console.log('fieldset exists');
 
     // check if cmd-list already exists
-    if (document.getElementsByClassName('chat-prompt-cmd-list')[0]) {
-        console.log('cmd-list already exists');
+    let dev = document.getElementsByClassName('chat-prompt-cmd-list')[0];
+    if (dev != null) {
+        if (dev.parentElement !== fieldset) {
+            fieldset.appendChild(dev);
+        }
+        // console.log('cmd-list already exists');
         return;
     }
 
-    let dev = document.createElement('div');
+    // create cmd-list
+    dev = document.createElement('div');
     dev.setAttribute('class', 'chat-prompt-cmd-list');
     fieldset.appendChild(dev);
-    console.log('cmd-list created');
+    // console.log('cmd-list created');
 }

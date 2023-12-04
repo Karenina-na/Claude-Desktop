@@ -23,9 +23,11 @@ protocol.registerSchemesAsPrivileged([
 // config
 const config = ConfigFactory();
 
+// win
+let win: BrowserWindow | null = null;
 app.whenReady().then(() => {
 
-    const win= new BrowserWindow({
+    win= new BrowserWindow({
         title: 'Claude',
         width: config.main_width,
         height: config.main_height,
@@ -43,27 +45,14 @@ app.whenReady().then(() => {
     session.setUserAgent(config.ua_tray);
 
     // load url
-    win.loadURL('https://claude.ai/chat/').then(r =>{
-        // 执行cmdInit
-        !win.webContents.executeJavaScript(
-            `
-            if(!window.__cmdInit__){
-                window.__cmdInit__ = true;
-                ${cmdInit.toString()}
-                cmdInit();
-            }
-            `
-        ) && logger.error('cmdInit failed')
-        }
-
-    ).catch(e => logger.error(e));
+    win.loadURL('https://claude.ai/chat/').then(r =>initCmd()).catch(e => logger.error(e));
 
     // tray
     createTray(win);
 
     // dev tools
     if (!app.isPackaged) {
-        // win.webContents.openDevTools({ mode: 'detach' });
+        win.webContents.openDevTools({ mode: 'detach' });
     }
 
     // stay on top
@@ -74,6 +63,19 @@ app.whenReady().then(() => {
     }
 
 })
+
+// init cmd
+async function initCmd(){
+    !await win.webContents.executeJavaScript(
+        `
+            if(!window.__cmdInit__){
+                window.__cmdInit__ = true;
+                ${cmdInit.toString()}
+                cmdInit();
+            }
+            `
+    );
+}
 
 // create menu
 app.on('ready',() =>{
