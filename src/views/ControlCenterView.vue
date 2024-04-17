@@ -76,7 +76,7 @@
             </div>
 
           </el-scrollbar>
-      </el-container>
+        </el-container>
       </el-aside>
         <el-main class="control-center-main-container">
           <el-scrollbar class="scrollbar">
