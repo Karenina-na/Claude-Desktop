@@ -62,8 +62,8 @@ export default function createMenu(config: configModel) {
                         // Create the browser window.
                         PromptWin = new BrowserWindow({
                             title: 'Prompt Center',
-                            width: 800,
-                            height: 600,
+                            width: 650,
+                            height: 450,
                             icon: "public/logo.png",
                             modal: true,
                             center: true,
@@ -74,7 +74,6 @@ export default function createMenu(config: configModel) {
                                 webSecurity: false,
                                 preload: path.join(__dirname, '../electron/preload.js'),
                             },
-                            titleBarStyle: 'hidden',
                             titleBarOverlay: {
                                 color: '#000000',
                                 symbolColor: '#74b1be',
