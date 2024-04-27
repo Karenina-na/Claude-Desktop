@@ -64,6 +64,7 @@ export default function createMenu(config: configModel) {
                             title: 'Prompt Center',
                             width: 650,
                             height: 450,
+                            resizable: false,
                             icon: "public/logo.png",
                             modal: true,
                             center: true,
