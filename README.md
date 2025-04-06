@@ -3,6 +3,7 @@
   <h1>Claude</h1>
   <p>Claude Desktop App (Windows)</p>
 </div>
+
 ---
 
 **Claude to Desktop is an Electron-based desktop application for Claude2.**
